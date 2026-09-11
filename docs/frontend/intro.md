@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introdução ao Frontend
 
-Esta seção reúne a documentação técnica do frontend do projeto Alexandrita:
+Esta seção reúne a documentação técnica do frontend do projeto Hubee:
 arquitetura de componentes, padrões de UI, decisões técnicas e guias de setup.
 
 ## O que documentar aqui

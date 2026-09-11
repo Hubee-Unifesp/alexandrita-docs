@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introdução à Infra
 
-Esta seção reúne a documentação de infraestrutura do projeto Alexandrita:
+Esta seção reúne a documentação de infraestrutura do projeto Hubee:
 ambientes, deploy, monitoramento e operação.
 
 ## O que documentar aqui

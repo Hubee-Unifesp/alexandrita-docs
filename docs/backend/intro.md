@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introdução ao Backend
 
-Esta seção reúne a documentação técnica do backend do projeto Alexandrita:
+Esta seção reúne a documentação técnica do backend do projeto Hubee:
 arquitetura, APIs, integrações, decisões técnicas (ADRs) e guias de setup do
 ambiente de desenvolvimento.
 

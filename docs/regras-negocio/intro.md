@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introdução às Regras de Negócio
 
-Esta seção reúne as regras de negócio do projeto Alexandrita: fluxos,
+Esta seção reúne as regras de negócio do projeto Hubee: fluxos,
 políticas, cálculos e decisões de produto que não são óbvias a partir do
 código.
 
