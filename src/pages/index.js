@@ -17,9 +17,9 @@ function HomepageHeader() {
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <p className={styles.heroDescription}>
-          Um só lugar para reunir as regras de negócio, decisões técnicas e
-          guias de setup do <strong>Hubee</strong> — a plataforma de gestão
-          de eventos universitários desenvolvida pelo time — para que
+          Um lugar para reunir as regras de negócio, decisões técnicas e
+          guias de setup do <strong>Hubee</strong>, nossa plataforma de gestão
+          de eventos universitários desenvolvida pelo grupo GOLF para que
           ninguém precise garimpar informação espalhada em mensagens,
           memória ou código.
         </p>
@@ -49,7 +49,8 @@ function AboutTheName() {
               perderia com o tempo. A ideia aqui é a mesma, em escala bem
               menor: um repositório único para o conhecimento técnico do
               time, em vez de decisões e contexto perdidos em conversas de
-              chat ou só na cabeça de quem escreveu o código.
+              chat ou só na cabeça de quem escreveu o código. Diferente da
+              biblioteca o alexandrita não queima ;)
             </p>
             <p>
               "Alexandrita" é o nome deste <em>portal de documentação</em>.
