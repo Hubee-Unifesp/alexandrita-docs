@@ -1,6 +1,6 @@
 {
   "label": "Infra",
-  "position": 4,
+  "position": 5,
   "link": {
     "type": "generated-index",
     "description": "Documentação de infraestrutura, deploy, ambientes e operação."

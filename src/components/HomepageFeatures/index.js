@@ -5,6 +5,12 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
+    title: 'Primeiros Passos',
+    to: '/primeiros-passos/intro',
+    description:
+      'O que você precisa fazer para começar a desenvolver no Hubee.',
+  },
+  {
     title: 'Boas Práticas e Guias',
     to: '/boas-praticas-guias/boas-praticas-banco-de-dados',
     description:
