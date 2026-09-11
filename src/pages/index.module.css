@@ -16,8 +16,22 @@
   }
 }
 
+.heroDescription {
+  max-width: 640px;
+  margin: 0 auto 1.5rem;
+  opacity: 0.9;
+}
+
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.aboutSection {
+  padding: 2rem 0 1rem;
+}
+
+.aboutCol p {
+  line-height: 1.7;
 }

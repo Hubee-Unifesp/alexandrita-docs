@@ -90,10 +90,15 @@ const config = {
           {
             title: 'Documentação',
             items: [
+              {
+                label: 'Boas Práticas e Guias',
+                to: '/boas-praticas-guias/boas-praticas-banco-de-dados',
+              },
               {label: 'Backend', to: '/backend/intro'},
               {label: 'Frontend', to: '/frontend/intro'},
               {label: 'Infra', to: '/infra/intro'},
               {label: 'Regras de Negócio', to: '/regras-negocio/intro'},
+              {label: 'Spikes', to: '/spikes/intro'},
             ],
           },
           {
