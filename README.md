@@ -1,6 +1,6 @@
 # Alexandrita Docs
 
-Repositório de documentação do projeto Alexandrita: regras de negócio,
+Repositório de documentação do projeto Hubee: regras de negócio,
 decisões técnicas e guias de setup, organizados por categoria (Backend,
 Frontend, Infra, Regras de Negócio).
 
