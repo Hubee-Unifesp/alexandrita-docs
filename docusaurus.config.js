@@ -14,7 +14,7 @@ const projectName = 'alexandrita-docs';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Alexandrita Docs',
-  tagline: 'Documentação do projeto Alexandrita',
+  tagline: 'Documentação do projeto Hubee',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future

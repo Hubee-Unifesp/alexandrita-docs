@@ -7,7 +7,6 @@ sidebar_position: 1
 > Documento de referência para o time, focado em conceitos: o que é uma
 > conexão, banco local vs. banco de produção, para que serve um ORM e como
 > configurar as variáveis de ambiente do backend
-> ([`Eng-Software/hubee-api`](https://github.com/Cibelleeg/hubee-api)).
 
 ## Índice
 
@@ -47,10 +46,11 @@ saber que existe e por que existe, não precisa mexer nisso no dia a dia.
 O **banco local** é um Postgres rodando na sua própria máquina, usado
 enquanto você desenvolve. Ele é independente do banco de produção: dados,
 schema e eventuais erros ficam isolados no seu computador, sem afetar
-ninguém.
+ninguém. É simples de manipular e resetar e os dados contidos nele não importam
+muito no escopo geral, por isso utilizamos esse banco local como seu "playground".
 
 Na `hubee-api`, o banco local sobe via Docker (não precisa instalar Postgres
-manualmente):
+manualmente), so seguir o passo a passo caso ja tenha os requisitos instalados:
 
 ```bash
 docker compose up -d
@@ -92,7 +92,7 @@ serviço de Postgres na nuvem.
 Diferenças importantes em relação ao banco local:
 
 - **Os dados são reais.** Um `DELETE` sem `WHERE`, um `DROP TABLE` ou uma
-  migration mal escrita afeta gente de verdade, não só o seu ambiente.
+  migration mal escrita afeta o usuário de verdade, não só o seu ambiente.
 - **É compartilhado.** Todo mundo que usa a aplicação em produção está
   apontando para o mesmo banco.
 - **Exige conexão criptografada (TLS)**, diferente do banco local.
