@@ -8,7 +8,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-const organizationName = 'Cibelleeg';
+const organizationName = 'Hubee-Unifesp';
 const projectName = 'alexandrita-docs';
 
 /** @type {import('@docusaurus/types').Config} */
