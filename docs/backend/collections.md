@@ -23,10 +23,17 @@ as requisições como arquivos versionáveis em Git.
 
 1. Abra o Bruno e selecione **Open Collection**.
 2. Escolha a pasta do repositório clonado.
-3. No seletor de ambiente (canto superior direito), selecione **local** —
-   ele define `baseUrl` como `http://localhost:3000`.
-4. Suba a [API localmente](./intro.md#rodando-localmente) e execute as
-   requisições pelas pastas correspondentes.
+3. No seletor de ambiente (canto superior direito), escolha um dos ambientes
+   disponíveis:
+
+   | Ambiente     | `baseUrl`                          |
+   | ------------ | ----------------------------------- |
+   | `local`      | `http://localhost:3000`             |
+   | `production` | `https://hubee-api.onrender.com`    |
+
+4. Para testar localmente, suba a [API](./intro.md#rodando-localmente) e use
+   o ambiente `local`. Para testar o ambiente de produção, use `production`
+   — com cautela, já que as requisições atingem a API real.
 
 ## Estrutura
 
@@ -37,7 +44,7 @@ do [`hubee-api`](./intro.md):
 USUARIOS/       # CRUD de usuários
 LOCAL/          # CRUD de locais de evento (venue)
 FORNECEDOR/     # CRUD de fornecedores
-environments/   # ambientes (local.baseUrl = http://localhost:3000)
+environments/   # ambientes: local (localhost:3000) e production (Render)
 ```
 
 As requisições usam `{{baseUrl}}` como host e herdam a autenticação definida
