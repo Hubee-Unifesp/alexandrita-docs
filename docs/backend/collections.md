@@ -31,9 +31,16 @@ as requisições como arquivos versionáveis em Git.
    | `local`      | `http://localhost:3000`             |
    | `production` | `https://hubee-api.onrender.com`    |
 
-4. Para testar localmente, suba a [API](./intro.md#rodando-localmente) e use
-   o ambiente `local`. Para testar o ambiente de produção, use `production`
-   — com cautela, já que as requisições atingem a API real.
+4. Para usar o ambiente `local`, a [API precisa estar rodando](./intro.md#rodando-localmente)
+   nessa máquina — sem ela no ar, as requisições falham por conexão recusada.
+
+> ⚠️ **Cuidado com o ambiente `production`**: ele aponta para a API real em
+> produção. Requisições de escrita (`POST`, `PATCH`, `DELETE`) alteram dados
+> de verdade no banco de produção — não são isoladas nem revertidas
+> automaticamente. Use `production` só para leitura/verificação pontual, e
+> nunca para rodar as collections de teste (como `USUARIOS`, que cria e
+> deleta registros). Veja [Boas práticas de banco de dados](../boas-praticas-guias/boas-praticas-banco-de-dados.md)
+> para entender a diferença entre banco local e de produção.
 
 ## Estrutura
 
