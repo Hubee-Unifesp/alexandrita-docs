@@ -2,6 +2,8 @@
 sidebar_position: 2
 ---
 
+import ColorSwatch from '@site/src/components/ColorSwatch';
+
 # Design System
 
 Base de componentes e tokens visuais do frontend do Hubee. A escolha do shadcn/ui está registrada na spike GOL-56 e a configuração foi feita na GOL-57. Os valores seguem o **Guia de Estilo v1**.
@@ -24,26 +26,26 @@ Hoje só o componente `Button` foi gerado (pelo `init`), e ainda não é usado e
 
 | Token | Valor |
 |-------|-------|
-| `hubee-50` | `#fffbed` |
-| `hubee-100` | `#fff3cc` |
-| `hubee-200` | `#ffe899` |
-| `hubee-300` | `#ffda66` |
-| `hubee-400` | `#ffcb33` |
-| `hubee-500` | `#fcb201` |
-| `hubee-600` | `#c98d00` |
-| `hubee-700` | `#966800` |
-| `hubee-800` | `#634400` |
-| `hubee-900` | `#181000` |
+| `hubee-50` | <ColorSwatch hex="#fffbed" /> |
+| `hubee-100` | <ColorSwatch hex="#fff3cc" /> |
+| `hubee-200` | <ColorSwatch hex="#ffe899" /> |
+| `hubee-300` | <ColorSwatch hex="#ffda66" /> |
+| `hubee-400` | <ColorSwatch hex="#ffcb33" /> |
+| `hubee-500` | <ColorSwatch hex="#fcb201" /> |
+| `hubee-600` | <ColorSwatch hex="#c98d00" /> |
+| `hubee-700` | <ColorSwatch hex="#966800" /> |
+| `hubee-800` | <ColorSwatch hex="#634400" /> |
+| `hubee-900` | <ColorSwatch hex="#181000" /> |
 
 ### Paleta neutra (`hubee-neutral`)
 
 | Token | Valor |
 |-------|-------|
-| `hubee-neutral-25` | `#fffdf6` |
-| `hubee-neutral-50` | `#e7e5e4` |
-| `hubee-neutral-200` | `#a09d9b` |
-| `hubee-neutral-300` | `#78716c` |
-| `hubee-neutral-500` | `#1c1917` |
+| `hubee-neutral-25` | <ColorSwatch hex="#fffdf6" /> |
+| `hubee-neutral-50` | <ColorSwatch hex="#e7e5e4" /> |
+| `hubee-neutral-200` | <ColorSwatch hex="#a09d9b" /> |
+| `hubee-neutral-300` | <ColorSwatch hex="#78716c" /> |
+| `hubee-neutral-500` | <ColorSwatch hex="#1c1917" /> |
 
 O prefixo `hubee-neutral` existe porque o Tailwind já tem uma paleta chamada `neutral`, e assim a do Hubee não a sobrescreve.
 
@@ -53,17 +55,17 @@ Os componentes do shadcn usam nomes semânticos (`background`, `primary`, etc.) 
 
 | Token | Claro | Escuro | Uso |
 |-------|-------|--------|-----|
-| `--background` | `#fffdf6` | `#181000` | fundo da página |
-| `--foreground` | `#634400` | `#fffbed` | texto de corpo |
-| `--card` / `--popover` | `#ffffff` | `#fffbed` | cartões e menus |
-| `--primary` | `#181000` | `#fffbed` | botão principal |
-| `--primary-foreground` | `#fffbed` | `#181000` | texto sobre o primary |
-| `--secondary` | `#fff3cc` | `#634400` | itens secundários |
-| `--accent` | `#fff3cc` | `#fff3cc` | item selecionado ou em foco |
-| `--muted` | `#e7e5e4` | `#634400` | áreas discretas |
-| `--muted-foreground` | `#78716c` | `#a09d9b` | textos discretos |
-| `--border` / `--input` | `#e7e5e4` | `#634400` | bordas e campos |
-| `--ring` | `#fcb201` | `#fcb201` | anel de foco |
+| `--background` | <ColorSwatch hex="#fffdf6" /> | <ColorSwatch hex="#181000" /> | fundo da página |
+| `--foreground` | <ColorSwatch hex="#634400" /> | <ColorSwatch hex="#fffbed" /> | texto de corpo |
+| `--card` / `--popover` | <ColorSwatch hex="#ffffff" /> | <ColorSwatch hex="#fffbed" /> | cartões e menus |
+| `--primary` | <ColorSwatch hex="#181000" /> | <ColorSwatch hex="#fffbed" /> | botão principal |
+| `--primary-foreground` | <ColorSwatch hex="#fffbed" /> | <ColorSwatch hex="#181000" /> | texto sobre o primary |
+| `--secondary` | <ColorSwatch hex="#fff3cc" /> | <ColorSwatch hex="#634400" /> | itens secundários |
+| `--accent` | <ColorSwatch hex="#fff3cc" /> | <ColorSwatch hex="#fff3cc" /> | item selecionado ou em foco |
+| `--muted` | <ColorSwatch hex="#e7e5e4" /> | <ColorSwatch hex="#634400" /> | áreas discretas |
+| `--muted-foreground` | <ColorSwatch hex="#78716c" /> | <ColorSwatch hex="#a09d9b" /> | textos discretos |
+| `--border` / `--input` | <ColorSwatch hex="#e7e5e4" /> | <ColorSwatch hex="#634400" /> | bordas e campos |
+| `--ring` | <ColorSwatch hex="#fcb201" /> | <ColorSwatch hex="#fcb201" /> | anel de foco |
 
 Os tokens de `chart` e `sidebar` mantêm os valores padrão do shadcn, porque ainda não são usados.
 
