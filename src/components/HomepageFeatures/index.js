@@ -27,6 +27,11 @@ const FeatureList = [
     description: 'Arquitetura, componentes e padrões do frontend.',
   },
   {
+    title: 'Figma',
+    to: '/figma/intro',
+    description: 'Guia visual, componentes e telas do design do produto.',
+  },
+  {
     title: 'Infra',
     to: '/infra/intro',
     description: 'Ambientes, deploy, monitoramento e operação.',
