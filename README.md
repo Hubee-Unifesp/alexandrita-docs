@@ -1,8 +1,8 @@
 # Alexandrita Docs
 
 Repositório de documentação do projeto Hubee: regras de negócio,
-decisões técnicas e guias de setup, organizados por categoria (Backend,
-Frontend, Infra, Regras de Negócio).
+decisões técnicas, design e guias de setup, organizados por categoria (Backend,
+Frontend, Infra, Regras de Negócio, Figma).
 
 O site é gerado a partir de arquivos Markdown com [Docusaurus](https://docusaurus.io/)
 e o acesso ao conteúdo é restrito por login/senha (HTTP Basic Auth via
@@ -32,10 +32,14 @@ npm run serve   # serve o build localmente em http://localhost:3000
 
 ```
 docs/
-  backend/          # Arquitetura, APIs e decisões técnicas do backend
-  frontend/          # Arquitetura, componentes e padrões do frontend
+  Primeiros Passos    # Guias de onboarding e setup inicial para novos desenvolvedores
+  backend/            # Arquitetura, APIs e decisões técnicas do backend
+  figma/              # Documentação de design, guias de estilo, telas e componentes
+  frontend/           # Arquitetura, componentes e padrões do frontend
   infra/              # Ambientes, deploy, monitoramento e operação
   regras-negocio/     # Regras de negócio, fluxos e decisões de produto
+  Spikes              # Pesquisas técnicas, provas de conceito (PoCs) e estudos de viabilidade
+
 ```
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md) para o guia completo de como
