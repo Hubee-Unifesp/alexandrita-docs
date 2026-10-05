@@ -5,6 +5,10 @@ title: Tela de Login
 
 A página de autenticação ("Login") possui 1 tela: uma área de Login exigindo campos obrigatórios como E-mail e Senha. Todo o design foi concebido para suportar na perfeição os modos claro e escuro, estando desenhado tanto para ecrãs desktop como para mobile (largura de 375px).
 
+## Design no Figma
+
+[Login - Register Web UI Kit](https://www.figma.com/design/fa3c4pxeHebzJpVkVYZRto/Login---Register-Web-UI-Kit--Freebie---Community-?node-id=0-1&t=j31q6LGSwYnzOjm4-0)
+
 ## Formulário e Campos
 O formulário recolhe as credenciais essenciais para o acesso à plataforma:
 * **E-mail:** Campo de texto normalizado para a identificação do utilizador.
@@ -21,3 +25,4 @@ O formulário recolhe as credenciais essenciais para o acesso à plataforma:
   * *Desabilitado* 
 * **Alerta geral de erro**  
 * *"E-mail ou senha inválidos"* para falhas gerais de autenticação.
+
