@@ -9,6 +9,8 @@ A página de autenticação ("Login") possui 1 tela: uma área de Login exigindo
 
 [Login - Register Web UI Kit](https://www.figma.com/design/fa3c4pxeHebzJpVkVYZRto/Login---Register-Web-UI-Kit--Freebie---Community-?node-id=0-1&t=j31q6LGSwYnzOjm4-0)
 
+![Tela de login](/img/login.png)
+
 ## Formulário e Campos
 O formulário recolhe as credenciais essenciais para o acesso à plataforma:
 * **E-mail:** Campo de texto normalizado para a identificação do utilizador.
