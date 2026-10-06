@@ -33,6 +33,9 @@ ambiente de desenvolvimento.
 
 ## Arquitetura
 
+Para ver como a API se conecta à Webpage e ao banco, veja
+[Arquitetura do sistema](../infra/arquitetura.md).
+
 Aplicação NestJS organizada em módulos por domínio, cada um com seu
 controller, service e (quando acessa dados) repository:
 
@@ -52,6 +55,11 @@ src/
 O bootstrap (`src/main.ts`) habilita CORS (origens configuráveis via
 `CORS_ORIGINS`), validação global de DTOs e shutdown hooks — para fechar o
 pool de conexões do Postgres de forma limpa ao encerrar o processo.
+
+## Autenticação
+
+Veja [Autenticação e cadastro](./autenticacao.md) para os contratos de cadastro,
+login e usuário logado, os guards de acesso e a migration de usuários.
 
 ## Banco de dados
 
@@ -85,6 +93,7 @@ inválida, a API não sobe e o erro aponta qual é.
 | `DB_PASSWORD` | Senha                                                         |
 | `DB_NAME`     | Nome do banco                                                 |
 | `DB_SSL`      | `true` para o Neon (exige TLS), `false` para Postgres local  |
+| `JWT_SECRET`  | Segredo obrigatório para assinar e verificar tokens JWT       |
 | `CORS_ORIGINS`| Origens permitidas no CORS, separadas por vírgula            |
 
 Veja [`.env.example`](https://github.com/Hubee-Unifesp/hubee-api/blob/main/.env.example)
