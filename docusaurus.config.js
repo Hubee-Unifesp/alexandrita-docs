@@ -32,6 +32,12 @@ const config = {
 
   onBrokenLinks: 'throw',
 
+  // Renderiza blocos ```mermaid como diagramas (ex.: docs/infra/arquitetura.md).
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang.
   i18n: {
@@ -112,6 +118,9 @@ const config = {
           },
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Alexandrita. Construído com Docusaurus.`,
+      },
+      mermaid: {
+        theme: {light: 'neutral', dark: 'dark'},
       },
       prism: {
         theme: prismThemes.github,
