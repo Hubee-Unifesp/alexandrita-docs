@@ -10,11 +10,11 @@ Esta seção apresenta os desenhos e especificações da interface da **Área Lo
 
 A interface centraliza as principais interações do usuário após a autenticação, contendo o menu lateral para navegação entre as seções (como "Meus pedidos" e "Meu perfil") e a área de exibição de conteúdo.
 
-![Tela da Área Logada (Conta)](/img/Conta.png)
+### Desktop
+![Tela da Área Logada (Desktop)](/img/Conta_Desktop.png)
 
-:::info
-**Atenção:** Ainda falta a adaptação dos componentes para o formato **mobile**. O design atual foca na experiência desktop e será atualizado posteriormente.
-:::
+### Mobile
+![Tela da Área Logada (Mobile)](/img/Conta_Mobile.png)
 
 ## Componentes
 
