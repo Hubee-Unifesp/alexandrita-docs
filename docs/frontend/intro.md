@@ -50,10 +50,10 @@ npm install
 npm run dev
 ```
 
-Por padrão sobe em `http://localhost:3000`, mas como a
-[API](../backend/intro.md) já usa essa porta, ao rodar os dois ao mesmo tempo
-o Next.js migra automaticamente para `http://localhost:3001` (porta também
-liberada por padrão no CORS da API). A aplicação consome a API configurada em
+O frontend sobe em `http://localhost:3001` por padrão (`next dev -p 3001`),
+porque a [API](../backend/intro.md) também espera a porta `3000` — rodando
+os dois com as portas padrão, um conflita com o outro. A porta `3001` já é
+liberada por padrão no CORS da API. A aplicação consome a API configurada em
 `NEXT_PUBLIC_API_URL`.
 
 ## Integração contínua
