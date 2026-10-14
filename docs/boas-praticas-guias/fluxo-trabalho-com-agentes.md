@@ -272,30 +272,7 @@ flowchart TD
 
 ---
 
-## 7. Preparação para a Avaliação ("Prova Oral" do Professor)
-
-Durante as reuniões com o professor, a equipe deve demonstrar **maturidade de processo**. Não somos meros "usuários de chat", mas desenvolvedores que aplicam engenharia de software contemporânea.
-
-### Possíveis Perguntas e Respostas Alinhadas:
-
-#### P1: *"Vocês estão apenas pedindo para a IA gerar código pronto sem saber o que ela está fazendo?"*
-> **Resposta da Equipe:**  
-> *"Não. Adotamos o modelo de **Context-Driven Development**. Nós atuamos como arquitetos do sistema: definimos previamente o escopo das sprints no YouTrack com critérios de aceite detalhados, disponibilizamos um arquivo de diretrizes (`AGENTS.md`) e documentação de arquitetura no Alexandrita. A IA atua na execução de código sob restrições estritas e passa obrigatoriamente por verificação de tipos, linters e testes automatizados antes de aceitarmos qualquer mudança."*
-
-#### P2: *"Como vocês evitam que a IA quebre o código existente ou introduza vulnerabilidades?"*
-> **Resposta da Equipe:**  
-> *"Utilizamos uma esteira de três camadas de segurança:  
-> 1) **Isolamento de branch:** Ninguém comita na branch principal; todo código fica isolado em uma branch `feat/GOL-XXX`.  
-> 2) **Validação mecânica local:** O próprio agente executa `npm run test` e `npm run lint` antes de propor o commit. Se houver falha, ele mesmo corrige com base no erro do compilador.  
-> 3) **Code Review humano:** Todo Pull Request é inspecionado por outro membro da equipe antes do merge."*
-
-#### P3: *"Por que vocês integraram o YouTrack com o fluxo de agentes?"*
-> **Resposta da Equipe:**  
-> *"Para manter rastreabilidade total sem perda de tempo com tarefas manuais e burocráticas. O agente consegue atualizar status no Agile Board, vincular dependências e criar subtasks via API REST em segundos, garantindo que o quadro de sprint reflita exatamente o que está acontecendo no Git em tempo real."*
-
----
-
-## 8. Tabela de Anti-Padrões (O que NUNCA Fazer)
+## 7. Tabela de Anti-Padrões (O que NUNCA Fazer)
 
 | Anti-Padrão | Consequência | Ação Correta |
 | :--- | :--- | :--- |
