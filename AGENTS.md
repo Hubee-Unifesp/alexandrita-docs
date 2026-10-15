@@ -137,6 +137,9 @@ flowchart TD
      npm run build
      ```
    - O commit só deve ser realizado após a confirmação: `[SUCCESS] Generated static files in "build"`.
-4. **Regra de Transição no YouTrack:**
+4. **Proibição de Commits/Push sem Permissão:**
+   - ⚠️ **NUNCA commite ou faça push sem autorização explícita do desenvolvedor.**
+   - O agente deve sempre validar o build localmente, listar os arquivos novos ou editados, e aguardar o comando expresso do desenvolvedor para comitar ou enviar ao repositório remoto.
+5. **Regra de Transição no YouTrack:**
    - Ao iniciar a tarefa, transicione para `State In Progress`.
    - ⚠️ **REGRA OBRIGATÓRIA:** NUNCA mova o status para verificação (`To Verify`) automaticamente. O encerramento da task e a mudança de status devem ser **explicitamente confirmados pelo desenvolvedor responsável**.
