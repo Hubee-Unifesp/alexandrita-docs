@@ -55,7 +55,7 @@ sequenceDiagram
     Agente->>Git: Commit semântico (feat: GOL-133 ...)
     Agente->>Git: git push origin feat/GOL-133-busca-eventos
     Dev->>Git: Abre Pull Request apontando para develop/main
-    Agente->>YT: Atualiza estado: "State Code Review" + Link do PR
+    Agente->>YT: Atualiza estado: "State To Verify" + Link do PR
     Dev->>Dev: Time revisa e aprova o PR
     Git->>Git: Merge do PR
     Dev->>YT: Transição para "State Done"
@@ -166,7 +166,7 @@ O payload é um JSON simples contendo a query do comando e a lista de issues afe
 | Ação Desejada | Query de Comando YouTrack |
 | :--- | :--- |
 | **Iniciar Tarefa** | `State In Progress` |
-| **Enviar para Code Review** | `State Code Review` |
+| **Enviar para Revisão / Code Review** | `State To Verify` |
 | **Finalizar Tarefa** | `State Done` |
 | **Atribuir a você** | `Assignee yuji.furukawa` (ou seu login) |
 | **Tornar Subtask de uma Story** | `subtask of GOL-123` |
@@ -248,7 +248,7 @@ flowchart TD
     Step4["4. Implementação em Pares<br/>• Agente escreve código + testes unitários"]
     Step5["5. Verificação Mecânica<br/>• npm run lint<br/>• npm run test<br/>• npm run build"]
     Step6["6. Commit & Push<br/>• Commit semântico: feat(scope): GOL-XXX ...<br/>• git push origin branch"]
-    Step7["7. Pull Request & Review<br/>• Abre PR com checklist<br/>• YouTrack: 'State Code Review'"]
+    Step7["7. Pull Request & Review<br/>• Abre PR com checklist<br/>• YouTrack: 'State To Verify'"]
 
     Step1 --> Step2 --> Step3 --> Step4 --> Step5 --> Step6 --> Step7
 ```
@@ -268,7 +268,7 @@ flowchart TD
    - Link direto para a issue no YouTrack.
    - Resumo das decisões técnicas tomadas.
    - Checklist de testes manuais e automatizados realizados.
-   - Atualização do YouTrack para `Code Review`.
+   - Atualização do YouTrack para `State To Verify`.
 
 ---
 
