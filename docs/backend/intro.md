@@ -61,6 +61,11 @@ pool de conexões do Postgres de forma limpa ao encerrar o processo.
 Veja [Autenticação e cadastro](./autenticacao.md) para os contratos de cadastro,
 login e usuário logado, os guards de acesso e a migration de usuários.
 
+## Busca de eventos
+
+Veja [Busca de eventos](./busca-eventos.md) para o contrato do `GET /events`:
+filtros, paginação, menor preço e erros de validação.
+
 ## Banco de dados
 
 - `src/database/schema/` — definição das tabelas (`index.ts` é o ponto de
