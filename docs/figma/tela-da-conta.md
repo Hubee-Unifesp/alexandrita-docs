@@ -21,3 +21,12 @@ A interface centraliza as principais interações do usuário após a autentica�
 - **Header Logado:** Apresenta o menu do usuário com acesso rápido ao perfil e pedidos.
 - **Navegação Lateral:** Utilizada para alternar rapidamente entre "Meus pedidos" e "Meu perfil" (destacando o item ativo).
 - **Área de Conteúdo:** Onde são exibidas as listas de pedidos, formulários de edição de perfil, etc.
+
+---
+
+## Visão do Organizador
+
+Para usuários vinculados a uma organização aceita, a área logada é expandida com navegação adaptativa, a tela de gestão **"Meus Eventos"** e o bloco de permissões RBAC no perfil.
+
+👉 Para detalhes visuais completos, consulte a documentação dedicada em [Interfaces do Organizador](./interfaces-do-organizador.md).
+
