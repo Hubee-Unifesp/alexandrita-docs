@@ -22,9 +22,8 @@ O desenho deve contemplar uma versão desktop e uma versão mobile com largura d
 
 - **Arquivo de referência do UI Kit:** [Login - Register Web UI Kit](https://www.figma.com/design/fa3c4pxeHebzJpVkVYZRto/Login---Register-Web-UI-Kit--Freebie---Community-?node-id=0-1&p=f&t=0aUvxEH5DFs1oE18-0).
 
-![Interface de busca e filtros de eventos](/img/filtros-eventos.png)
+![Interface de busca e filtros de eventos - desktop](/img/filtros-eventos.png)
 
-
-
+![Interface de busca e filtros de eventos - celular](/img/filtros-eventos-celular.png)
 
 
