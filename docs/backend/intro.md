@@ -66,6 +66,12 @@ login e usuário logado, os guards de acesso e a migration de usuários.
 Veja [Busca de eventos](./busca-eventos.md) para o contrato do `GET /events`:
 filtros, paginação, menor preço e erros de validação.
 
+## Detalhes do evento
+
+Veja [Detalhes do evento](./detalhes-evento.md) para o contrato do
+`GET /events/:id`: local com endereço, organização, lotes de ingressos e regras
+de visibilidade.
+
 ## Banco de dados
 
 - `src/database/schema/` — definição das tabelas (`index.ts` é o ponto de
