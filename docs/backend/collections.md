@@ -51,6 +51,7 @@ do [`hubee-api`](./intro.md):
 USUARIOS/       # CRUD de usuários
 LOCAL/          # CRUD de locais de evento (venue)
 FORNECEDOR/     # CRUD de fornecedores
+EVENTOS/        # Consulta e detalhes de eventos (GET /events/:id)
 environments/   # ambientes: local (localhost:3000) e production (Render)
 ```
 
