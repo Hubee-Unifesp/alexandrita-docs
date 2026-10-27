@@ -125,7 +125,37 @@ sequenceDiagram
 
 ---
 
-## 7. Prancha Visual de Referência (Figma GOL-143)
+## 7. Política de Autorização: Comprador, Organizador e Administrador da Plataforma
+
+Além dos papéis dentro de uma organização, a plataforma tem um papel global, gravado em `users.role`. As duas dimensões são independentes:
+
+| Perfil | Como é identificado | Escopo |
+| :--- | :--- | :--- |
+| **Comprador** | `role = 'USER'` sem vínculo aceito em `organization_users`. | Compra ingressos e acessa apenas os próprios pedidos, ingressos e perfil. |
+| **Organizador** | `role = 'USER'` com ao menos um vínculo aceito. | Tudo o que o comprador faz, mais as capacidades do seu papel (seção 3) **apenas** na organização do recurso. |
+| **Administrador da plataforma** | `role = 'ADMIN'`. | Acesso total a todas as organizações. É o único que pode destacar eventos na página inicial (`featured`). |
+
+* O papel global `ADMIN` **não** é atribuído pelo cadastro: o campo `role` não é aceito no corpo de `POST /auth/register`.
+* O papel `admin` de uma organização (`organization_users.role`) não tem relação com o `ADMIN` da plataforma: ele só vale dentro daquela organização.
+
+### Aplicação na API (GOL-144)
+
+As regras desta matriz já valem para os eventos na `hubee-api`:
+
+| Ação | Exigência na API | Resposta para quem não pode |
+| :--- | :--- | :--- |
+| Ver papéis do usuário logado | `GET /users/me` (ou `/auth/me`) devolve `organizations` com `role`, `permission` e `level` de cada vínculo aceito. | — |
+| Criar evento (`POST /events`) | `ADMIN` ou nível `write` na organização do `organizerId`. | `403 Forbidden` (comprador ou membro só com `read`) |
+| Editar evento (`PATCH /events/:id`) | `ADMIN` ou nível `write` na organização dona do evento. | `404 Not Found` para quem não é membro; `403` para membro só com `read` |
+| Cancelar evento (`DELETE /events/:id` ou `PATCH` com `status: cancelled`) | `ADMIN` ou nível `manage`. | `403` para membro sem `manage`; `404` para quem não é membro |
+| Ver rascunhos da organização | `GET /events?organizerId=<org>` feito por `ADMIN` ou por membro da organização. | Os demais só veem eventos publicados |
+| Destacar na home (`featured`) | Só `ADMIN`. | `403` |
+
+Recurso de outra organização responde `404`, e não `403`, para não revelar que ele existe. Os detalhes técnicos (decorator `@OrgAccess`, ordem das verificações e códigos de erro) estão em [Autenticação e cadastro](../backend/autenticacao.md#autorização-por-organização).
+
+---
+
+## 8. Prancha Visual de Referência (Figma GOL-143)
 
 Abaixo está a prancha oficial de especificação de regras de negócio e matriz RBAC desenhada no Figma:
 
