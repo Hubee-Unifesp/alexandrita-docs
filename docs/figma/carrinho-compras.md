@@ -30,3 +30,7 @@ O desenho contempla uma versão desktop e uma versão mobile com largura de refe
 
 ![Tela de compra - tema escuro (desktop)](/img/tela-compra-escuro-desktop.png)
 
+![Tela de compra - tema claro (mobile)](/img/tela-compra-claro-mobile.png)
+
+![Tela de compra - tema escuro (mobile)](/img/tela-compra-escuro-mobile.png)
+
