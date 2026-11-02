@@ -52,6 +52,9 @@ USUARIOS/       # CRUD de usuários
 LOCAL/          # CRUD de locais de evento (venue)
 FORNECEDOR/     # CRUD de fornecedores
 EVENTOS/        # Consulta e detalhes de eventos (GET /events/:id)
+PEDIDOS/        # Criação de pedidos e itens (POST /orders)
+PAGAMENTOS/     # Checkout e liquidação de pedidos (POST /payments)
+INGRESSOS/      # Consulta de ingressos e portaria (GET /tickets)
 environments/   # ambientes: local (localhost:3000) e production (Render)
 ```
 
@@ -61,6 +64,20 @@ na pasta (`auth: inherit`).
 > O repositório mistura requisições no formato `.bru` (mais antigo) e `.yml`
 > (formato mais recente do Bruno, [Opencollection](https://opencollection.dev/))
 > — ambos funcionam normalmente ao abrir a collection.
+
+### Exemplos de Requisições de Compra e Ingressos
+
+- **Criar Pedido (`POST /orders`)**:
+  - **Headers**: `Authorization: Bearer {{token}}`
+  - **Body**: `{ "items": [{ "ticketTypeId": "{{ticketTypeId}}", "quantity": 1 }] }`
+  - **Respostas**: `201 Created` com total calculado pelo servidor; `422 Unprocessable Entity` se lote estiver esgotado.
+- **Checkout / Pagamento (`POST /payments`)**:
+  - **Headers**: `Authorization: Bearer {{token}}`
+  - **Body**: `{ "orderId": "{{orderId}}", "paymentMethod": "pix" }`
+  - **Respostas**: `201 Created` com status `confirmado` e emissão atômica de ingressos.
+- **Consultar Ingressos (`GET /tickets`)**:
+  - **Headers**: `Authorization: Bearer {{token}}`
+  - **Respostas**: `200 OK` trazendo a lista de ingressos com QR code criptográfico de 64 caracteres e dados aninhados de evento e lote.
 
 ## Convenções
 

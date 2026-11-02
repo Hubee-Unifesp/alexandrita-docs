@@ -72,6 +72,12 @@ Veja [Detalhes do evento](./detalhes-evento.md) para o contrato do
 `GET /events/:id`: local com endereço, organização, lotes de ingressos e regras
 de visibilidade.
 
+## Compra e ingressos
+
+Veja [Compra e emissão de ingressos](./compras-e-ingressos.md) para os contratos
+de criação de pedido (`POST /orders`), checkout (`POST /payments`), emissão de
+ingressos com QR Code e consulta da carteira (`GET /tickets`).
+
 ## Banco de dados
 
 - `src/database/schema/` — definição das tabelas (`index.ts` é o ponto de
