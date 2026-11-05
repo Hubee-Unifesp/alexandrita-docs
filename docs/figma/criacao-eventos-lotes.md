@@ -21,8 +21,6 @@ flowchart LR
     D -- Salvar e sair --> A
 ```
 
-No desktop, as etapas aparecem lado a lado. No mobile, elas viram um dropdown com a indicação "Etapa X de 3", para ocupar menos espaço no topo da tela.
-
 ## Etapa 1: dados do evento
 
 | Seção | Campo | Regra | Campo da API |
@@ -39,6 +37,8 @@ No desktop, as etapas aparecem lado a lado. No mobile, elas viram um dropdown co
 | **Local** | Local do evento | Obrigatório, escolhido entre os locais cadastrados. A capacidade máxima aparece ao selecionar | `venueId` |
 
 A organização vem da organização ativa em Meus Eventos (`organizerId`). O campo `featured` não aparece no formulário, porque só o administrador da plataforma pode destacar eventos.
+
+No mobile, cada seção abre e fecha para reduzir a rolagem. Só "Informações básicas" começa aberta, e as seções fechadas mostram um resumo do que foi preenchido. Uma seção com erro de validação fica aberta. No desktop, todas ficam sempre abertas.
 
 ![Dados do evento - tema claro (desktop)](/img/gol-205/dados-claro-desktop.png)
 
