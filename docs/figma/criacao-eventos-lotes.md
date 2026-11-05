@@ -8,11 +8,6 @@ description: Especificação visual do fluxo de criação de eventos e gerenciam
 
 Esta página registra o desenho da criação de eventos e do gerenciamento de lotes de ingressos, definido na **GOL-205**. O fluxo começa no botão **"Criar Novo Evento"** de [Meus Eventos](./interfaces-do-organizador.md) e contempla desktop e mobile (375 px), nos temas claro e escuro.
 
-## Referências de design
-
-- **Protótipo interativo:** [GOL-205 • Criação de eventos e lotes](https://claude.ai/artifact/PmtyVGsZ74jL8R8ukT3Agp)
-- **Figma:** a incluir quando as telas forem passadas para o arquivo do time.
-
 ## Fluxo
 
 O fluxo tem três etapas porque a API só cria lotes em um evento que já existe (`POST /events/:eventId/ticket-types`). Por isso, a primeira etapa termina criando um rascunho, e as etapas seguintes ficam travadas até esse rascunho ser salvo.
@@ -43,6 +38,14 @@ flowchart LR
 
 A organização vem da organização ativa em Meus Eventos (`organizerId`). O campo `featured` não aparece no formulário, porque só o administrador da plataforma pode destacar eventos.
 
+![Dados do evento - tema claro (desktop)](/img/gol-205/dados-claro-desktop.png)
+
+![Dados do evento - tema escuro (desktop)](/img/gol-205/dados-escuro-desktop.png)
+
+### Erros de validação
+
+![Dados do evento com erros de validação](/img/gol-205/estado-erros-dados.png)
+
 ## Etapa 2: ingressos
 
 Cada lote tem nome (`batch`), preço (`price`) e quantidade (`quantity`). Preço zero aparece como **Gratuito**. A tela também mostra quanto da capacidade do local já está distribuída em lotes.
@@ -59,6 +62,38 @@ Cada lote tem nome (`batch`), preço (`price`) e quantidade (`quantity`). Preço
 
 No desktop, os lotes aparecem em uma tabela. No mobile, cada lote vira um card.
 
+![Lotes com vendas - tema claro (desktop)](/img/gol-205/lotes-claro-desktop.png)
+
+![Lotes com vendas - tema escuro (desktop)](/img/gol-205/lotes-escuro-desktop.png)
+
+### Novo lote
+
+![Novo lote - tema claro (desktop)](/img/gol-205/novo-lote-claro-desktop.png)
+
+![Novo lote - tema escuro (desktop)](/img/gol-205/novo-lote-escuro-desktop.png)
+
+### Estados dos lotes
+
+#### Evento sem lotes
+
+![Evento sem lotes](/img/gol-205/estado-sem-lotes.png)
+
+#### Lotes acima da capacidade do local
+
+![Lotes acima da capacidade do local](/img/gol-205/estado-capacidade.png)
+
+#### Quantidade menor que o total vendido
+
+![Edição de lote com quantidade menor que o total vendido](/img/gol-205/estado-editar-erro.png)
+
+#### Exclusão de lote sem vendas
+
+![Confirmação de exclusão de lote](/img/gol-205/estado-excluir.png)
+
+#### Papel Leitura
+
+![Lotes no papel Leitura](/img/gol-205/estado-leitura.png)
+
 ## Etapa 3: revisão
 
 A revisão lista as pendências ao lado de uma prévia do evento:
@@ -71,6 +106,25 @@ A revisão lista as pendências ao lado de uma prévia do evento:
 | Capa informada | Recomendado |
 
 Depois de publicar, a mensagem de sucesso informa se os ingressos já podem ser comprados ou quando as vendas abrem.
+
+![Revisão - tema claro (desktop)](/img/gol-205/revisao-claro-desktop.png)
+
+![Revisão - tema escuro (desktop)](/img/gol-205/revisao-escuro-desktop.png)
+
+### Publicação bloqueada
+
+Sem lote, o botão **Publicar evento** fica desabilitado.
+
+![Publicação bloqueada por falta de lote](/img/gol-205/estado-publicacao-bloqueada.png)
+
+## Mobile (375 px)
+
+| Tela | Tema claro | Tema escuro |
+| :--- | :---: | :---: |
+| **Dados do evento** | ![Dados do evento - claro (mobile)](/img/gol-205/dados-claro-mobile.png) | ![Dados do evento - escuro (mobile)](/img/gol-205/dados-escuro-mobile.png) |
+| **Ingressos** | ![Lotes - claro (mobile)](/img/gol-205/lotes-claro-mobile.png) | ![Lotes - escuro (mobile)](/img/gol-205/lotes-escuro-mobile.png) |
+| **Novo lote** | ![Novo lote - claro (mobile)](/img/gol-205/novo-lote-claro-mobile.png) | ![Novo lote - escuro (mobile)](/img/gol-205/novo-lote-escuro-mobile.png) |
+| **Revisão** | ![Revisão - claro (mobile)](/img/gol-205/revisao-claro-mobile.png) | ![Revisão - escuro (mobile)](/img/gol-205/revisao-escuro-mobile.png) |
 
 ## Permissões
 
