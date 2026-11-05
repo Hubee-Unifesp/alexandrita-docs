@@ -21,6 +21,8 @@ flowchart LR
     D -- Salvar e sair --> A
 ```
 
+No desktop, as etapas aparecem lado a lado. No mobile, elas viram um dropdown com a indicação "Etapa X de 3", para ocupar menos espaço no topo da tela.
+
 ## Etapa 1: dados do evento
 
 | Seção | Campo | Regra | Campo da API |
