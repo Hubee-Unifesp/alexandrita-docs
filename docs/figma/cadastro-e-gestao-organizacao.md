@@ -144,6 +144,3 @@ No formulário de criação e na seção de edição da organização, a interfa
 | **2. Erros de Validação** | Caso o usuário tente submeter com o nome vazio ou com menos de 2 caracteres, o campo recebe borda semântica de erro (`aria-invalid="true"`) e exibe a mensagem em vermelho logo abaixo do input (*"Informe o nome da organização."* ou *"O nome da organização deve ter pelo menos 2 caracteres."*). |
 | **3. Envio / Carregamento (*Loading*)** | Durante o envio, o botão de submissão fica desabilitado (`disabled`, `aria-busy="true"`), exibe o ícone de *spinner* animado e altera o rótulo para **"Criando organização..."** (ou **"Salvando..."**). |
 | **4. Confirmação / Sucesso** | Após a conclusão, é exibido um alerta de confirmação (*"Organização criada com sucesso!"* ou *"Dados da organização atualizados com sucesso."*). |
-
-### Demonstração dos Estados de Erro e Validação
-![Estados de Erro e Validação na Criação de Organização](/img/Interfaces_organizador/criar-organizacao-estados-erro.png)
