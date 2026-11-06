@@ -24,18 +24,72 @@ A especificação da **GOL-196** contempla a jornada para se tornar organizador 
 
 | Componente / Ponto de Entrada | Descrição Visual e Contrato | Rota no Front-end |
 | :--- | :--- | :--- |
+| **Cadastro com Vínculo à Organização (`RegisterScreen`)** | Permite ao usuário escolher no momento da criação de conta se deseja comprar ingressos ou organizar eventos. Ao optar por organizar, permite selecionar uma organização existente ou acionar o botão **+ Criar organização**. | `/cadastro?intent=ORGANIZE` |
+| **Página de Criação de Organização (`CreateOrganizationScreen`)** | Formulário dedicado para criação de nova organização com campos de **Nome** (`name`) e **Descrição** (`description`), validação visual e redirecionamento com vínculo automático. | `/organizacoes/nova` |
 | **Card "Permissões e perfil" — Sem Organização (`PermissoesCard`)** | Exibe o resumo da conta (`Tipo de conta`, `Objetivo no cadastro` e `Criação de eventos: Não permitida`), seguido de linha divisória e caixa de ação para **Vincular à organização** existente ou **+ Criar organização**. | `/conta/perfil` |
 | **Card "Permissões e perfil" — Com Organização (`PermissoesCard`)** | Atualiza o resumo para `Criação de eventos: Permitida`, lista as organizações vinculadas com badge de papel (`Administrador`, `Membro` ou `Leitura`), atalho **"+ Nova organização"** e botão **"Editar organização"**. | `/conta/perfil` |
-| **Seção / Modal de Criação e Edição de Organização** | Formulário com os campos **Nome da organização** (`name`) e **Descrição (opcional)** (`description`). A edição é restrita a usuários com papel **Administrador** (`manage`). | `/conta/perfil` e `/organizacoes/nova` |
+| **Seção / Modal de Edição de Organização** | Formulário com os campos **Nome da organização** (`name`) e **Descrição (opcional)** (`description`). A edição é restrita a usuários com papel **Administrador** (`manage`). | `/conta/perfil` |
 | **Estado Vazio em "Meus Eventos" (`MeusEventosContent`)** | Quando o usuário acessa a área de eventos sem organização vinculada, exibe estado vazio orientativo com o CTA primário **"Criar organização"**. | `/conta/eventos` |
 
 ---
 
-## 2. Seção "Permissões e perfil" em `/conta/perfil`
+## 2. Fluxo de Entrada no Cadastro de Conta (`/cadastro`)
+
+Quando o usuário acessa a tela de registro de conta e seleciona o objetivo de cadastro **"Organizar eventos"**:
+- A interface exibe a seção dinâmica de **Organização**, com um seletor para escolher uma atlética, centro acadêmico ou produtora já cadastrada;
+- Caso a organização ainda não exista, o botão secundário em destaque **"+ Criar organização"** redireciona o usuário para o formulário de cadastro de organização;
+- O layout foi projetado e validado para **Desktop (`1440px`)** e **Mobile (`375px`)**, em temas **Claro** e **Escuro**.
+
+### 2.1. Telas em Resolução Desktop (1440px)
+
+#### Tema Claro (Desktop)
+![Criar Conta de Organizador — Claro Desktop](/img/Interfaces_organizador/cadastro-organizador-desktop-claro.png)
+
+#### Tema Escuro (Desktop)
+![Criar Conta de Organizador — Escuro Desktop](/img/Interfaces_organizador/cadastro-organizador-desktop-escuro.png)
+
+### 2.2. Telas em Resolução Mobile (375px)
+
+#### Tema Claro (Mobile)
+![Criar Conta de Organizador — Claro Mobile](/img/Interfaces_organizador/cadastro-organizador-mobile-claro.png)
+
+#### Tema Escuro (Mobile)
+![Criar Conta de Organizador — Escuro Mobile](/img/Interfaces_organizador/cadastro-organizador-mobile-escuro.png)
+
+---
+
+## 3. Página de Criação de Organização (`/organizacoes/nova`)
+
+A página `/organizacoes/nova` permite que o futuro organizador cadastre sua instituição ou produtora:
+- **Campos do formulário:**
+  - `Nome da organização` (obrigatório, mínimo 2 caracteres, máximo 255 caracteres);
+  - `Descrição` (opcional, máximo 500 caracteres, textarea com 4 linhas);
+- **Ações:** Botão primário com token `hubee-400` (`#FACC15`) e atalho inferior com link para retornar ao cadastro;
+- **Responsividade:** Disponível em versões completas para Desktop e Mobile em ambos os temas.
+
+### 3.1. Telas em Resolução Desktop (1440px)
+
+#### Tema Claro (Desktop)
+![Criar Organização — Claro Desktop](/img/Interfaces_organizador/criar-organizacao-desktop-claro.png)
+
+#### Tema Escuro (Desktop)
+![Criar Organização — Escuro Desktop](/img/Interfaces_organizador/criar-organizacao-desktop-escuro.png)
+
+### 3.2. Telas em Resolução Mobile (375px)
+
+#### Tema Claro (Mobile)
+![Criar Organização — Claro Mobile](/img/Interfaces_organizador/criar-organizacao-mobile-claro.png)
+
+#### Tema Escuro (Mobile)
+![Criar Organização — Escuro Mobile](/img/Interfaces_organizador/criar-organizacao-mobile-escuro.png)
+
+---
+
+## 4. Seção "Permissões e perfil" em `/conta/perfil`
 
 No **Meu Perfil** (`/conta/perfil`), o cartão **Permissões e perfil** concentra a visualização de acessos e a gestão de organizações em **3 estados principais**, desenhados nos modos **Claro** e **Escuro**:
 
-### 2.1. Estado 1 — Sem Organização Vinculada
+### 4.1. Estado 1 — Sem Organização Vinculada
 
 Quando o usuário ainda não faz parte de nenhuma organização (`Criação de eventos: Não permitida`):
 - Uma **linha divisória sutil** separa o resumo de 3 colunas (`Tipo de conta`, `Objetivo no cadastro` e `Criação de eventos`) da seção **Organizações**;
@@ -50,7 +104,7 @@ Quando o usuário ainda não faz parte de nenhuma organização (`Criação de e
 
 ---
 
-### 2.2. Estado 2 — Com Organização Vinculada (Visão de Administrador)
+### 4.2. Estado 2 — Com Organização Vinculada (Visão de Administrador)
 
 Após criar uma organização ou ter o vínculo aceito:
 - O resumo superior passa a exibir `Objetivo no cadastro: Organizar eventos` e `Criação de eventos: Permitida`;
@@ -65,7 +119,7 @@ Após criar uma organização ou ter o vínculo aceito:
 
 ---
 
-### 2.3. Estado 3 — Edição dos Dados Cadastrais da Organização
+### 4.3. Estado 3 — Edição dos Dados Cadastrais da Organização
 
 Ao acionar o botão **"Editar organização"** (exclusivo para o papel **Administrador** / permissão `manage`):
 - A seção **Editar organização** exibe o indicador `Acesso: Administrador` no canto superior direito;
@@ -80,7 +134,7 @@ Ao acionar o botão **"Editar organização"** (exclusivo para o papel **Adminis
 
 ---
 
-## 3. Estados Obrigatórios de Interface e Validação
+## 5. Estados Obrigatórios de Interface e Validação
 
 No formulário de criação e na seção de edição da organização, a interface contempla os **4 estados obrigatórios**:
 
@@ -90,3 +144,6 @@ No formulário de criação e na seção de edição da organização, a interfa
 | **2. Erros de Validação** | Caso o usuário tente submeter com o nome vazio ou com menos de 2 caracteres, o campo recebe borda semântica de erro (`aria-invalid="true"`) e exibe a mensagem em vermelho logo abaixo do input (*"Informe o nome da organização."* ou *"O nome da organização deve ter pelo menos 2 caracteres."*). |
 | **3. Envio / Carregamento (*Loading*)** | Durante o envio, o botão de submissão fica desabilitado (`disabled`, `aria-busy="true"`), exibe o ícone de *spinner* animado e altera o rótulo para **"Criando organização..."** (ou **"Salvando..."**). |
 | **4. Confirmação / Sucesso** | Após a conclusão, é exibido um alerta de confirmação (*"Organização criada com sucesso!"* ou *"Dados da organização atualizados com sucesso."*). |
+
+### Demonstração dos Estados de Erro e Validação
+![Estados de Erro e Validação na Criação de Organização](/img/Interfaces_organizador/criar-organizacao-estados-erro.png)
