@@ -102,6 +102,8 @@ A tela de gestão de eventos da organização ativa oferece listagem paginada, f
 
 Apresenta no perfil do usuário suas organizações associadas e seu respectivo nível de acesso.
 
+> Para a especificação detalhada do fluxo de **criação, vínculo e edição de organizações (GOL-196)**, consulte a página dedicada [Cadastro e Gestão de Organização](./cadastro-e-gestao-organizacao.md).
+
 ### 4.1. Desktop (1440px)
 
 As telas desktop são apresentadas em largura total para melhor leitura dos campos, textos explicativos e badges de permissão.
