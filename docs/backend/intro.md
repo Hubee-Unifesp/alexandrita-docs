@@ -78,6 +78,12 @@ Veja [Compra e emissão de ingressos](./compras-e-ingressos.md) para os contrato
 de criação de pedido (`POST /orders`), checkout (`POST /payments`), emissão de
 ingressos com QR Code e consulta da carteira (`GET /tickets`).
 
+## Fornecedores
+
+Veja [Fornecedores](./fornecedores.md) para os contratos do CRUD de fornecedores
+(`/suppliers`), regras de autorização de organizador (`@OrganizerOnly`) e filtros
+de busca (`search` e `category`).
+
 ## Banco de dados
 
 - `src/database/schema/` — definição das tabelas (`index.ts` é o ponto de
