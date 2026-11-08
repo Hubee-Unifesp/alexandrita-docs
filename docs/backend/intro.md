@@ -84,6 +84,12 @@ Veja [Fornecedores](./fornecedores.md) para os contratos do CRUD de fornecedores
 (`/suppliers`), regras de autorização de organizador (`@OrganizerOnly`) e filtros
 de busca (`search` e `category`).
 
+## Organizações
+
+Veja [Organizações](./organizacoes.md) para os contratos de `/organizations`,
+a criação transacional com vínculo automático de administrador (`role = 'admin'`,
+nível `manage`) e as regras de permissão RBAC (`403` vs `404`) no `PATCH`.
+
 ## Banco de dados
 
 - `src/database/schema/` — definição das tabelas (`index.ts` é o ponto de

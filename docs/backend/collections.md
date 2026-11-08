@@ -51,6 +51,7 @@ do [`hubee-api`](./intro.md):
 USUARIOS/       # CRUD de usuários
 LOCAL/          # CRUD de locais de evento (venue)
 FORNECEDOR/     # CRUD de fornecedores
+ORGANIZACOES/   # CRUD de organizações e validação RBAC (GOL-197 / GOL-198)
 EVENTOS/        # Consulta e detalhes de eventos (GET /events/:id)
 PEDIDOS/        # Criação de pedidos e itens (POST /orders)
 PAGAMENTOS/     # Checkout e liquidação de pedidos (POST /payments)
