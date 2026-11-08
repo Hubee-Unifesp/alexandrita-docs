@@ -88,20 +88,20 @@ Nenhum destes itens tem task aberta específica. Os critérios de severidade sã
 | --- | --- | --- | --- | --- |
 | [BUG-01](#bug-01) | Crítica | Web · Perfil | Quem se cadastra pelo site não consegue comprar | Reproduzido |
 | [BUG-02](#bug-02) | Alta | API · Pagamento | O checkout aceita pedido de evento cancelado | Reproduzido |
-| [BUG-03](#bug-03) | Alta | API · Pedido | Pedido pendente reserva o lote para sempre | Reproduzido |
+| [BUG-03](#já-corrigidos) | Alta | API · Pedido | Pedido pendente reserva o lote para sempre | Corrigido ([GOL-212](https://es-unifesp.youtrack.cloud/issue/GOL-212)) |
 | [BUG-04](#bug-04) | Alta | API · Banco | Bancos migrados antes da `0000` ser regerada não migram | Reproduzido em 29/10 |
-| [BUG-05](#bug-05) | Média | API · Pedido | Cancelar pedido pago mantém o ingresso válido e libera o saldo | Reproduzido |
-| [BUG-06](#bug-06) | Média | API · Pedido | ADMIN marca pedido como pago sem pagamento nem ingressos | Reproduzido |
+| [BUG-05](#já-corrigidos) | Média | API · Pedido | Cancelar pedido pago mantém o ingresso válido e libera o saldo | Corrigido ([GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214)) |
+| [BUG-06](#já-corrigidos) | Média | API · Pedido | ADMIN marca pedido como pago sem pagamento nem ingressos | Corrigido ([GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214)) |
 | [BUG-07](#bug-07) | Média | API · Pagamento | O estorno não altera o pedido nem os ingressos | Reproduzido |
-| [BUG-08](#bug-08) | Média | API · Ingresso | A emissão manual de ingressos ignora o estoque | Reproduzido |
-| [BUG-09](#bug-09) | Média | API · Evento | Lotes de rascunho ficam visíveis para visitantes | Reproduzido |
-| [BUG-10](#bug-10) | Média | API · Auth | O token continua valendo depois de excluir a conta | Reproduzido |
+| [BUG-08](#já-corrigidos) | Média | API · Ingresso | A emissão manual de ingressos ignora o estoque | Corrigido ([GOL-216](https://es-unifesp.youtrack.cloud/issue/GOL-216)) |
+| [BUG-09](#já-corrigidos) | Média | API · Evento | Lotes de rascunho ficam visíveis para visitantes | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
+| [BUG-10](#já-corrigidos) | Média | API · Auth | O token continua valendo depois de excluir a conta | Corrigido ([GOL-218](https://es-unifesp.youtrack.cloud/issue/GOL-218)) |
 | [BUG-11](#bug-11) | Média | API · Auth | O login não limita tentativas | Reproduzido |
 | [BUG-12](#bug-12) | Média | API · Evento | Ingressos cancelados continuam contando como vendidos | Reproduzido |
 | [BUG-13](#bug-13) | Média | Web · Pedidos | Ingressos de evento encerrado ficam sem o evento | Reproduzido |
 | [BUG-14](#bug-14) | Média | Web · Pedidos | Pedido pendente aparece sem evento e sem ação | Reproduzido |
-| [BUG-15](#bug-15) | Baixa | API · Lote | Excluir lote com vendas responde `500` | Reproduzido |
-| [BUG-16](#bug-16) | Baixa | API · Lote | A capacidade do lote pode ficar abaixo do vendido | Reproduzido |
+| [BUG-15](#já-corrigidos) | Baixa | API · Lote | Excluir lote com vendas responde `500` | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
+| [BUG-16](#já-corrigidos) | Baixa | API · Lote | A capacidade do lote pode ficar abaixo do vendido | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
 | [BUG-17](#bug-17) | Baixa | Web · Perfil | O front aceita senha de 8 a 72 caracteres, e a API só de 6 a 20 | Reproduzido |
 | [BUG-18](#bug-18) | Baixa | API · Testes | `tsc` acusa 7 erros em specs | Reproduzido |
 | [BUG-19](#bug-19) | Baixa | Web · Eventos | Categorias fora das seis conhecidas viram "Outros" | Reproduzido |
@@ -160,30 +160,6 @@ definir o destino dos pedidos e ingressos, que hoje continuam como estão.
 **Correção sugerida:** revalidar o evento dentro da transaction do checkout, com
 a mesma regra de `isOnSale`.
 
-### BUG-03
-
-**Pedido pendente reserva o lote para sempre**
-
-- **Severidade:** Alta · **Evidência:** Reproduzido
-- **Onde:** `src/order/order-item.repository.ts` (`sumReservedByTicketType`) e
-  `src/lib/api/events.ts` (`isTicketTypeSoldOut`, na web)
-
-**Passos**
-
-1. Num lote de 10 ingressos, criar um pedido pendente com 10.
-2. Criar outro pedido no mesmo lote.
-
-**Obtido:** o segundo pedido recebe `422` com "está esgotado", e a reserva nunca
-expira. Um único usuário pode bloquear um lote inteiro sem pagar. Por leitura de
-código, a tela pode continuar mostrando "Disponível", porque não considera as
-reservas.
-
-**Esperado:** a reserva expira depois de um prazo, e a tela mostra o mesmo saldo
-que a API usa.
-
-**Correção sugerida:** guardar a validade da reserva, limitar a quantidade por
-usuário e expor o saldo por lote na API.
-
 ### BUG-04
 
 **Bancos migrados antes da `0000` ser regerada não migram**
@@ -209,44 +185,6 @@ regerada.
 
 ## Médios
 
-### BUG-05
-
-**Cancelar pedido pago mantém o ingresso válido e libera o saldo**
-
-- **Severidade:** Média · **Evidência:** Reproduzido
-- **Onde:** `src/order/order.service.ts` (`update`)
-
-**Passos**
-
-1. Num lote de 1 unidade, comprar o ingresso.
-2. Como ADMIN, chamar `PATCH /orders/:id` com `{ "status": "cancelado" }`.
-3. Criar outro pedido no mesmo lote.
-
-**Obtido:** `200`, o ingresso continua `emitido`, e o novo pedido é aceito.
-
-**Esperado:** a transição é recusada, como já acontece em `DELETE /orders/:id`, ou
-o ingresso também é cancelado.
-
-**Correção sugerida:** criar uma máquina de estados para o pedido, como já existe
-em pagamentos e ingressos.
-
-### BUG-06
-
-**ADMIN marca pedido como pago sem pagamento nem ingressos**
-
-- **Severidade:** Média · **Evidência:** Reproduzido
-- **Onde:** `src/order/dto/update-order.dto.ts`
-
-**Passos:** como ADMIN, chamar `PATCH /orders/:id` em um pedido pendente, com
-`{ "status": "pago", "totalAmount": 0 }`.
-
-**Obtido:** `200`. O pedido fica pago e "Gratuito", sem pagamento e sem ingressos,
-e o checkout passa a recusá-lo por já estar pago.
-
-**Esperado:** o pedido só chega a `pago` pelo checkout, e o total não é editável.
-
-**Correção sugerida:** remover `totalAmount` do DTO e restringir as transições.
-
 ### BUG-07
 
 **O estorno não altera o pedido nem os ingressos**
@@ -264,58 +202,6 @@ não tem esse status.
 
 **Correção sugerida:** atualizar pedido e ingressos na mesma transaction e
 adicionar `estornado` ao enum de pedido.
-
-### BUG-08
-
-**A emissão manual de ingressos ignora o estoque**
-
-- **Severidade:** Média · **Evidência:** Reproduzido
-- **Onde:** `src/ticket/ticket.service.ts` (`create`)
-
-**Passos:** comprar o único ingresso de um lote e, como ADMIN, emitir mais 3 com
-`POST /orders/:orderId/tickets`.
-
-**Obtido:** `201`. Meus Pedidos mostra "4 ingressos" com total de R$ 50,00.
-
-**Esperado:** a emissão respeita o saldo e os itens do pedido.
-
-**Correção sugerida:** remover a rota, já que o checkout emite os ingressos, ou
-aplicar a mesma validação de saldo.
-
-### BUG-09
-
-**Lotes de rascunho ficam visíveis para visitantes**
-
-- **Severidade:** Média · **Evidência:** Reproduzido
-- **Onde:** `src/ticket-type/ticket-type.service.ts` (`findAll`, `findOne`)
-
-**Passos:** sem token, chamar `GET /events/:id` e
-`GET /events/:id/ticket-types` de um evento em rascunho.
-
-**Obtido:** o evento responde `404`, mas os lotes respondem `200`, com preços.
-
-**Esperado:** as duas rotas respondem `404`.
-
-**Correção sugerida:** usar `EventService.findVisible(eventId, viewer)` com o
-`OptionalJwtAuthGuard`.
-
-### BUG-10
-
-**O token continua valendo depois de excluir a conta**
-
-- **Severidade:** Média · **Evidência:** Reproduzido
-- **Onde:** `src/auth/guards/jwt-auth.guard.ts`
-
-**Passos:** excluir a conta e, com o mesmo token, chamar `GET /users/me/orders` e
-`GET /users/me/tickets`.
-
-**Obtido:** `200` nas duas rotas. Por leitura de código, o mesmo vale para um ADMIN
-rebaixado e para sessões antigas depois da troca de senha.
-
-**Esperado:** `401` para conta removida ou inativa.
-
-**Correção sugerida:** buscar o usuário no guard, recusar contas removidas ou
-inativas e usar o `role` do banco.
 
 ### BUG-11
 
@@ -389,32 +275,12 @@ que trata do organizador.
 pagar ou cancelar.
 
 **Esperado:** a tela mostra os itens do pedido e permite pagar ou cancelar. Sem
-isso, o comprador não consegue liberar a reserva do [BUG-03](#bug-03).
+isso, o comprador não consegue liberar a reserva do [BUG-03](#já-corrigidos).
 
 **Correção sugerida:** usar `items` de `GET /orders/:id`, em vez de deduzir os
 itens a partir dos ingressos.
 
 ## Baixos
-
-### BUG-15
-
-**Excluir lote com vendas responde `500`**
-
-- **Onde:** `src/ticket-type/ticket-type.service.ts` (`remove`)
-- **Passos:** como ADMIN, chamar `DELETE /events/:id/ticket-types/:lote` em um
-  lote com ingresso emitido.
-- **Obtido:** `500 Internal server error`, por violação de chave estrangeira.
-- **Esperado:** `409` com uma mensagem em português.
-
-### BUG-16
-
-**A capacidade do lote pode ficar abaixo do vendido**
-
-- **Onde:** `src/ticket-type/ticket-type.service.ts` (`update`)
-- **Passos:** chamar `PATCH` com `{ "quantity": 0 }` em um lote com ingresso
-  vendido.
-- **Obtido:** `200`.
-- **Esperado:** `422`, recusando quantidade menor do que a já reservada.
 
 ### BUG-17
 
@@ -522,14 +388,22 @@ itens a partir dos ingressos.
 ## Já corrigidos
 
 Estes itens constavam do levantamento de 29/10 e foram revalidados na `develop`
-atual.
+atual, ou foram corrigidos nas tasks subsequentes do YouTrack.
 
 | Bug | Correção |
 | --- | --- |
 | Comprador criava o próprio pagamento já `confirmado` e com qualquer valor | GOL-175: a rota passou a ser `@AdminOnly()`, e `POST /payments` usa o total do pedido |
 | O cliente definia o valor do pedido, e o pedido não tinha itens | GOL-175: o pedido tem itens, e o total é calculado no servidor |
-| A compra ignorava o estoque do lote | GOL-175: o saldo é validado em transaction. A emissão manual continua no [BUG-08](#bug-08) |
+| A compra ignorava o estoque do lote | GOL-175: o saldo é validado em transaction. A emissão manual continua no [BUG-08](#já-corrigidos) |
 | A migration `0002` falhava em bancos com lotes | GOL-164: `DEFAULT 0` na `0002` e criação da `0004` |
+| **BUG-03:** Pedido pendente reserva o lote para sempre | [GOL-212](https://es-unifesp.youtrack.cloud/issue/GOL-212): expiração de reservas de pedidos pendentes em 15 minutos e validação de saldo no checkout |
+| **BUG-05:** Cancelar pedido pago mantém o ingresso válido e libera o saldo | [GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214): máquina de estados para pedidos; cancelamento invalida ingressos e ajusta saldo em transaction |
+| **BUG-06:** ADMIN marca pedido como pago sem pagamento nem ingressos | [GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214): remoção de `totalAmount` do DTO de atualização e transição para `pago` restrita ao checkout |
+| **BUG-08:** A emissão manual de ingressos ignora o estoque | [GOL-216](https://es-unifesp.youtrack.cloud/issue/GOL-216): validação de estoque, capacidade e itens do pedido na emissão manual |
+| **BUG-09:** Lotes de rascunho ficam visíveis para visitantes | [GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217): rota de lotes valida visibilidade do evento e status de autenticação (404 para visitantes em rascunhos) |
+| **BUG-10:** O token continua valendo depois de excluir a conta | [GOL-218](https://es-unifesp.youtrack.cloud/issue/GOL-218): validação de usuário ativo e não excluído (`deleted_at is null`) no JWT Auth Guard |
+| **BUG-15:** Excluir lote com vendas responde `500` | [GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217): exclusão de lote com ingressos vinculados retorna `409 Conflict` com mensagem descritiva |
+| **BUG-16:** A capacidade do lote pode ficar abaixo do vendido | [GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217): atualização de capacidade valida quantidade mínima contra ingressos vendidos e reservados (`422`) |
 
 ## Funcionalidades incompletas
 
@@ -549,12 +423,12 @@ Para discutir com o time:
 1. **Liberar a venda:** verificar o PR da GOL-177 e abrir uma task para o
    [BUG-01](#bug-01).
 2. **Proteger a compra:** abrir uma task para o [BUG-02](#bug-02) e o
-   [BUG-03](#bug-03).
+   [BUG-03](#já-corrigidos).
 3. **Conferir o Neon** ([BUG-04](#bug-04)) antes de migrar a produção.
-4. **Regras de estado:** agrupar o [BUG-05](#bug-05), o [BUG-06](#bug-06), o
-   [BUG-07](#bug-07), o [BUG-08](#bug-08) e o [BUG-12](#bug-12) numa task de
+4. **Regras de estado:** agrupar o [BUG-05](#já-corrigidos), o [BUG-06](#já-corrigidos), o
+   [BUG-07](#bug-07), o [BUG-08](#já-corrigidos) e o [BUG-12](#bug-12) numa task de
    pedidos, estornos e ingressos.
-5. **Segurança:** agrupar o [BUG-09](#bug-09), o [BUG-10](#bug-10) e o
+5. **Segurança:** agrupar o [BUG-09](#já-corrigidos), o [BUG-10](#já-corrigidos) e o
    [BUG-11](#bug-11).
 6. **Telas de pedidos:** agrupar o [BUG-13](#bug-13), o [BUG-14](#bug-14) e o
    [BUG-22](#bug-22).
