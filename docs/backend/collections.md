@@ -52,7 +52,7 @@ USUARIOS/       # CRUD de usuários
 LOCAL/          # CRUD de locais de evento (venue)
 FORNECEDOR/     # CRUD de fornecedores
 ORGANIZACOES/   # CRUD de organizações e validação RBAC (GOL-197 / GOL-198)
-EVENTOS/        # Consulta e detalhes de eventos (GET /events/:id)
+EVENTOS/        # Ciclo completo de eventos (/events) e CRUD de lotes (/events/:eventId/ticket-types) (GOL-147 / GOL-207)
 PEDIDOS/        # Criação de pedidos e itens (POST /orders)
 PAGAMENTOS/     # Checkout e liquidação de pedidos (POST /payments)
 INGRESSOS/      # Consulta de ingressos e portaria (GET /tickets)
@@ -65,6 +65,19 @@ na pasta (`auth: inherit`).
 > O repositório mistura requisições no formato `.bru` (mais antigo) e `.yml`
 > (formato mais recente do Bruno, [Opencollection](https://opencollection.dev/))
 > — ambos funcionam normalmente ao abrir a collection.
+
+### Exemplos de Requisições de Gerenciamento de Eventos e Lotes (`EVENTOS/`)
+
+Consulte a documentação completa em [Gerenciamento de Eventos e Lotes de Ingressos](./eventos-e-lotes.md). As requisições da pasta `EVENTOS/` exercitam o fluxo do organizador em sequência:
+
+- **`POST CRIAR EVENTO.yml`** (`POST {{baseUrl}}/events`): Cria evento em rascunho (`draft`) com `Bearer {{tokenOrganizador}}` e salva `{{eventId}}`.
+- **`POST CRIAR EVENTO SEM PERMISSAO.yml`** (`POST {{baseUrl}}/events`): Valida o retorno `403 Forbidden` ao tentar criar evento com `Bearer {{tokenComprador}}`.
+- **`PATCH ATUALIZAR EVENTO.yml`** (`PATCH {{baseUrl}}/events/:id`): Atualiza os dados e publica o evento `{{eventId}}` (`status: "published"`).
+- **`POST CRIAR LOTE INGRESSO.yml`** (`POST {{baseUrl}}/events/:eventId/ticket-types`): Cadastra um lote de ingressos no evento `{{eventId}}` e salva `{{ticketTypeId}}`.
+- **`GET LISTAR LOTES DO EVENTO.yml`** (`GET {{baseUrl}}/events/:eventId/ticket-types`): Lista os lotes do evento `{{eventId}}` com o saldo calculado `available`.
+- **`PATCH ATUALIZAR LOTE INGRESSO.yml`** (`PATCH {{baseUrl}}/events/:eventId/ticket-types/:id`): Atualiza nome, preço e quantidade do lote `{{ticketTypeId}}`.
+- **`DELETE REMOVER LOTE INGRESSO.yml`** (`DELETE {{baseUrl}}/events/:eventId/ticket-types/:id`): Remove o lote `{{ticketTypeId}}` sem vínculos (`204 No Content`).
+- **`DELETE CANCELAR EVENTO.yml`** (`DELETE {{baseUrl}}/events/:id`): Cancela o evento `{{eventId}}` exigindo nível `manage` (`204 No Content`).
 
 ### Exemplos de Requisições de Compra e Ingressos
 
