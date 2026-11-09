@@ -196,7 +196,8 @@ documentam as respostas `401`/`403` no Swagger:
 | --- | --- | --- |
 | `@Authenticated()` | Qualquer usuário logado. | Rotas do próprio usuário; o service confere se o recurso é dele. |
 | `@AdminOnly()` | Só `role = ADMIN`. | Rotas de administração da plataforma. |
-| `@OrgAccess(level, source)` | `ADMIN` ou membro da organização com pelo menos `level`. | Rotas de organizador, como criar e editar eventos. |
+| `@OrganizerOnly()` | `ADMIN` ou usuário com vínculo `accepted` em qualquer organização. | Catálogos compartilhados entre organizadores (ex.: `/suppliers`). |
+| `@OrgAccess(level, source)` | `ADMIN` ou membro da organização com pelo menos `level`. | Rotas de organizador, como criar e editar eventos, lotes e organizações. |
 
 ## Autorização por organização
 
@@ -234,34 +235,44 @@ deve ser gravada.
 
 | `source` | Organização usada | Exemplo |
 | --- | --- | --- |
-| `{ from: 'org', param? }` (padrão) | Param da rota com o ID da organização (padrão `orgId`). | `@OrgAccess('manage')` |
-| `{ from: 'event', param? }` | `organizer_id` do evento do param (padrão `eventId`). | `@OrgAccess('write', { from: 'event', param: 'id' })` |
+| `{ from: 'org', param? }` (padrão) | Param da rota com o ID da organização (padrão `orgId`), respondendo `403` para não-membros. | `@OrgAccess('manage')` |
+| `{ from: 'param', param? }` | Param da rota com o ID da organização (padrão `id`), respondendo `404` para não-membros (oculta existência). | `@OrgAccess('manage', { from: 'param', param: 'id' })` |
+| `{ from: 'event', param? }` | `organizer_id` do evento do param (padrão `eventId`), respondendo `404` para não-membros. | `@OrgAccess('write', { from: 'event', param: 'id' })` |
 | `{ from: 'body', field? }` | Campo do body com o ID da organização (padrão `organizerId`). | `@OrgAccess('write', { from: 'body', field: 'organizerId' })` |
+| `{ from: 'any' }` | Qualquer vínculo aceito do usuário que satisfaça o `level` exigido (`GOL-206`). | `@OrgAccess('write', { from: 'any' })` |
 
 O guard segue esta ordem:
 
 1. Sem usuário autenticado: `401`.
 2. `role = ADMIN`: libera.
-3. ID da organização (ou do evento) ausente ou fora do formato UUID: `400`.
-4. Evento inexistente: `404`.
+3. ID da organização (ou do evento) ausente ou fora do formato UUID (quando a origem não é `any`): `400`.
+4. Evento ou organização inexistente: `404`.
 5. Sem vínculo aceito na organização:
-   - com `source` `event`, responde `404`, igual a um evento inexistente, para
-     não revelar que o evento existe;
-   - nas outras origens, `403`.
+   - com `source` `event` ou `param`, responde `404`, igual a um recurso inexistente, para
+     não revelar que o recurso existe;
+   - nas outras origens (`org`, `body`, `any`), `403`.
 6. Vínculo com nível menor que o exigido: `403`.
 
 O vínculo é lido do banco a cada requisição, e não do JWT. Um convite aceito ou
 uma permissão alterada valem na próxima requisição, sem novo login.
 
-### Regras aplicadas aos eventos
+### Regras aplicadas aos eventos, lotes e locais
+
+Para os contratos completos de eventos e lotes, veja [Gerenciamento de Eventos e Lotes de Ingressos](./eventos-e-lotes.md).
 
 | Rota | Quem pode | Quem não pode recebe |
 | --- | --- | --- |
+| `POST /venues` | `ADMIN` ou membro com `write` em qualquer organização (`{ from: 'any' }`). | `403` |
 | `POST /events` | `ADMIN` ou membro com `write` na organização do `organizerId` do body. | `403` |
 | `PATCH /events/:id` | `ADMIN` ou membro com `write` na organização dona do evento. | `404` se não é membro; `403` se é membro só com `read` |
+| `PATCH /events/:id/photo` | `ADMIN` ou membro com `write` na organização dona do evento. | `404` se não é membro; `403` se é membro só com `read` |
 | `PATCH /events/:id` com `status: cancelled` | `ADMIN` ou membro com `manage`. | `403` |
 | `DELETE /events/:id` (cancela) | `ADMIN` ou membro com `manage`. | `404` se não é membro; `403` se é membro sem `manage` |
-| `featured` no body do `POST`/`PATCH` | Só `ADMIN`. | `403` |
+| `POST /events/:eventId/ticket-types` | `ADMIN` ou membro com `write` na organização dona do evento (`GOL-206`). | `404` se não é membro; `403` se é membro só com `read` |
+| `PATCH /events/:eventId/ticket-types/:id` | `ADMIN` ou membro com `write` na organização dona do evento (`GOL-206`). | `404` se não é membro; `403` se é membro só com `read` |
+| `DELETE /events/:eventId/ticket-types/:id` | `ADMIN` ou membro com `write` na organização dona do evento (`GOL-206`). | `404` se não é membro; `403` se é membro só com `read` |
+| `GET /events/:eventId/ticket-types` (e `/:id`) | Público para eventos publicados. Nos demais status, só `ADMIN` e membros da organização. | `404` |
+| `featured` no body do `POST`/`PATCH /events` | Só `ADMIN`. | `403` |
 | `GET /events` | Público. Só `ADMIN` e membros da organização filtrada em `?organizerId=` veem eventos não publicados. | Para os demais, o filtro `status` é ignorado e só aparecem eventos publicados |
 | `GET /events/:id` | Público para eventos publicados. Os demais só para `ADMIN` e membros da organização. | `404` |
 
