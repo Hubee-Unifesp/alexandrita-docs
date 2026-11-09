@@ -12,7 +12,9 @@ de **lotes de ingressos** (`ticketTypes`). É o endpoint consumido pela
 [página de detalhes do evento](../figma/detalhes-do-evento.md) na Webpage.
 
 Para a listagem paginada e filtrada de eventos, veja
-[Busca de eventos](./busca-eventos.md).
+[Busca de eventos](./busca-eventos.md). Para a criação, edição, publicação,
+cancelamento e gerenciamento de lotes pelo organizador, veja
+[Gerenciamento de Eventos e Lotes de Ingressos](./eventos-e-lotes.md).
 
 ## Acesso e visibilidade
 
@@ -22,14 +24,15 @@ cabeçalho `Authorization: Bearer <token>` é opcional:
 | Quem chama | O que vê |
 | --- | --- |
 | Visitante (sem `Authorization`) | Apenas eventos com status `published` (`404` nos demais status) |
-| Usuário autenticado (`USER`) | Apenas eventos com status `published` (`404` nos demais status) |
+| Usuário autenticado (`USER`) sem vínculo na organização do evento | Apenas eventos com status `published` (`404` nos demais status) |
+| Membro da organização do evento (`invite_status = 'accepted'`, níveis `read`, `write` ou `manage`) | Eventos da organização em qualquer status (`draft`, `published`, `finished`, `cancelled`) |
 | Administrador (`ADMIN`) | Eventos em qualquer status (`draft`, `published`, `finished`, `cancelled`) |
 | Token enviado, mas inválido ou expirado | `401 Unauthorized` |
 
 Eventos em `draft`, `finished` ou `cancelled` respondem `404 Not Found` para
-visitantes e usuários comuns (`USER`), com a mesma mensagem de um evento
-inexistente. Assim, a API não revela a existência de rascunhos ou eventos não
-publicados.
+visitantes e usuários que não pertencem à organização responsável pelo evento,
+com a mesma mensagem de um evento inexistente. Assim, a API não revela a
+existência de rascunhos ou eventos não publicados a terceiros.
 
 ```mermaid
 flowchart TD
@@ -40,7 +43,7 @@ flowchart TD
     Guard -- Sem token ou token válido --> Repo["EventRepository.findDetailById(id)"]
     Repo --> Exists{"Evento existe?"}
     Exists -- Não --> E404["404 Not Found"]
-    Exists -- Sim --> Role{"viewer é ADMIN ou\nstatus === 'published'?"}
+    Exists -- Sim --> Role{"status === 'published' ou\nviewer é ADMIN ou membro da org?"}
     Role -- Não --> E404
     Role -- Sim --> DTO["toResponse(EventDetailResponseDto, event)\n200 OK"]
 ```
@@ -81,7 +84,7 @@ página pública via `toResponse`:
 | --- | --- | --- |
 | `EventDetailOrganizationDto` | `id`, `name`, `description` | `representativeId`, `createdAt`, `updatedAt` |
 | `EventDetailVenueDto` | `id`, `name`, `maxCapacity`, `address` (`AddressResponseDto`) | `active`, `addressId`, `createdAt`, `updatedAt` |
-| `TicketTypeResponseDto` | `id`, `eventId`, `batch`, `price`, `quantity`, `createdAt`, `updatedAt` | — |
+| `TicketTypeResponseDto` | `id`, `eventId`, `batch`, `price`, `quantity`, `available`, `createdAt`, `updatedAt` | — |
 
 ## Exemplos
 
