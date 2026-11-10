@@ -334,18 +334,18 @@ Remove um lote de ingressos do evento caso ainda não existam vendas ou reservas
 
 ## 5. Testando o Fluxo Completo no Bruno (`hubee-collections`)
 
-A pasta `EVENTOS/` no repositório [`hubee-collections`](./collections.md) disponibiliza a sequência numerada de requisições para exercitar todo o gerenciamento de eventos e lotes usando `{{baseUrl}}`, `{{tokenOrganizador}}`, `{{eventId}}` e `{{ticketTypeId}}`:
+As pastas `EVENTOS/` e `LOTES DE INGRESSO/` no repositório [`hubee-collections`](./collections.md) disponibilizam a sequência de requisições para exercitar todo o gerenciamento de eventos e lotes usando `{{baseUrl}}`, `{{tokenOrganizador}}`, `{{eventId}}` e `{{ticketTypeId}}`:
 
-| Ordem (`seq`) | Arquivo em `EVENTOS/` | Método e Rota | Comportamento / Variáveis Salvas |
+| Ordem | Requisição | Método e Rota | Comportamento / Variáveis Salvas |
 | :---: | :--- | :--- | :--- |
-| `1` | `POST CRIAR EVENTO.yml` | `POST {{baseUrl}}/events` | Cria o evento em `draft` com `{{tokenOrganizador}}` e grava `res.body.id` em `{{eventId}}`. |
-| `2` | `POST CRIAR EVENTO SEM PERMISSAO.yml` | `POST {{baseUrl}}/events` | Valida o bloqueio `403 Forbidden` quando chamado com `{{tokenComprador}}`. |
-| `3` | `PATCH ATUALIZAR EVENTO.yml` | `PATCH {{baseUrl}}/events/:id` | Atualiza dados do evento `{{eventId}}` e publica (`status: "published"`), validando `200 OK`. |
-| `4` | `POST CRIAR LOTE INGRESSO.yml` | `POST {{baseUrl}}/events/:eventId/ticket-types` | Cria um lote no evento `{{eventId}}` e grava `res.body.id` em `{{ticketTypeId}}`. |
-| `5` | `GET LISTAR LOTES DO EVENTO.yml` | `GET {{baseUrl}}/events/:eventId/ticket-types` | Lista os lotes de `{{eventId}}` conferindo o retorno em array e o campo `available`. |
-| `6` | `PATCH ATUALIZAR LOTE INGRESSO.yml` | `PATCH {{baseUrl}}/events/:eventId/ticket-types/:id` | Atualiza `batch`, `price` e `quantity` do lote `{{ticketTypeId}}` (`200 OK`). |
-| `7` | `DELETE REMOVER LOTE INGRESSO.yml` | `DELETE {{baseUrl}}/events/:eventId/ticket-types/:id` | Remove o lote `{{ticketTypeId}}` quando não há pedidos/ingressos vinculados (`204 No Content`). |
-| `8` | `DELETE CANCELAR EVENTO.yml` | `DELETE {{baseUrl}}/events/:id` | Cancela o evento `{{eventId}}` exigindo nível `manage` (`204 No Content`). |
+| `1` | `EVENTOS/POST CRIAR EVENTO.yml` | `POST {{baseUrl}}/events` | Cria o evento em `draft` com `{{tokenOrganizador}}` e grava o `id` em `{{eventId}}`. |
+| `2` | `EVENTOS/POST CRIAR EVENTO SEM PERMISSAO.yml` | `POST {{baseUrl}}/events` | Valida o bloqueio `403 Forbidden` quando chamado com `{{tokenComprador}}`. |
+| `3` | `EVENTOS/PATCH ATUALIZAR EVENTO.yml` | `PATCH {{baseUrl}}/events/:id` | Atualiza dados do evento `{{eventId}}` e publica (`status: "published"`), validando `200 OK`. |
+| `4` | `LOTES DE INGRESSO/POST CRIAR LOTE.yml` | `POST {{baseUrl}}/events/:eventId/ticket-types` | Cria um lote no evento `{{eventId}}` e grava o `id` em `{{ticketTypeId}}`. |
+| `5` | `LOTES DE INGRESSO/GET LISTAR LOTES.yml` | `GET {{baseUrl}}/events/:eventId/ticket-types` | Lista os lotes de `{{eventId}}` conferindo o retorno em array e o campo `available`. |
+| `6` | `LOTES DE INGRESSO/PATCH ATUALIZAR LOTE.yml` | `PATCH {{baseUrl}}/events/:eventId/ticket-types/:id` | Atualiza `batch`, `price` e `quantity` do lote `{{ticketTypeId}}` (`200 OK`). |
+| `7` | `LOTES DE INGRESSO/DELETE REMOVER LOTE.yml` | `DELETE {{baseUrl}}/events/:eventId/ticket-types/:id` | Remove o lote `{{ticketTypeId}}` quando não há pedidos/ingressos vinculados (`204 No Content`). |
+| `8` | `EVENTOS/DELETE CANCELAR EVENTO.yml` | `DELETE {{baseUrl}}/events/:id` | Cancela o evento `{{eventId}}` exigindo nível `manage` (`204 No Content`). |
 
 ---
 
