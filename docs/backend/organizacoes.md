@@ -268,7 +268,7 @@ A pasta `ORGANIZACOES/` no repositório [`hubee-collections`](./collections.md) 
 
 1. `POST CRIAR ORGANIZACAO.yml` — Cria a organização com `{{tokenOrganizador}}` e salva automaticamente o `id` retornado em `{{organizationId}}`.
 2. `GET LISTAR ORGANIZACOES.yml` — Lista organizações filtrando por `?name=Atlética`.
-3. `GET ORGANIZACAO POR ID.yml` — Consulta `{{baseUrl}}/organizations/:id` usando `{{organizationId}}`.
+3. `GET BUSCAR ORGANIZACAO.yml` — Consulta `{{baseUrl}}/organizations/:id` usando `{{organizationId}}`.
 4. `PATCH ATUALIZAR ORGANIZACAO.yml` — Atualiza `name` e `description` usando `{{tokenOrganizador}}` (cenário de sucesso com nível `manage`, status `200`).
-5. `PATCH ORGANIZACAO SEM PERMISSAO.yml` — Tenta atualizar a organização com `{{tokenComprador}}` (cenário de bloqueio RBAC da GOL-197, retornando `404` para não-membro ou `403` para membro sem `manage`).
-6. `DELETE ORGANIZACAO.yml` — Remove a organização `{{organizationId}}` (`204 No Content` para `ADMIN` global).
+5. `PATCH ATUALIZAR ORGANIZACAO SEM PERMISSAO.yml` — Tenta atualizar a organização com `{{tokenComprador}}` (cenário de bloqueio RBAC da GOL-197, retornando `404` para não-membro ou `403` para membro sem `manage`).
+6. `DELETE REMOVER ORGANIZACAO.yml` — Remove a organização `{{organizationId}}` com `{{tokenAdmin}}` (`204 No Content` para `ADMIN` global).
