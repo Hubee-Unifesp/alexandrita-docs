@@ -137,17 +137,51 @@ alternativa.
 5. Corrigir a URL de produção no `.env.example` do front e na página de
    collections.
 
+## Configuração aplicada (GOL-255)
+
+Em **12/11/2026**, foram verificados a cota do Render e configurado o job de
+keep-alive no **cron-job.org**:
+
+- **Painel do Render (`Hubee's workspace`):**
+  - Serviços ativos: **1 serviço** (`hubee-api`, Node, plano **Free**, região
+    Oregon, deploy contínuo a partir da branch `main`).
+  - Consumo registrado em 12/11/2026: **`12,18 h / 750 h`** de *Free Instance
+    Hours* (`6 MB / 5 GB` de banda e `1 min / 500 min` de pipeline).
+- **Escolha entre cron-job.org e UptimeRobot 24 h:** apesar de a `hubee-api`
+  ser o único serviço Free (o que permitiria ping 24 h com ~720–744 h/mês dentro
+  da cota de 750 h), optou-se por manter o **cron-job.org** restrito à janela
+  diurna para preservar **~250 h/mês de folga** caso novos serviços ou previews
+  sejam criados na workspace.
+- **Conta e acesso ao cron-job.org:** criada com o **e-mail oficial da
+  página/equipe** Hubee; acesso
+  compartilhado entre os membros que administram o e-mail da página, sem
+  credenciais armazenadas no repositório).
+- **Parâmetros do job:**
+  - Método e URL: `GET https://hubee-api-1.onrender.com/health/ping`
+  - Expressão cron (`Custom`): `*/10 7-22 * * *` (minutos `0, 10, 20, 30, 40,
+    50`; horas `7` a `22`, mantendo a API acordada até ~23h05, ~500 h/mês)
+  - Fuso horário: `America/Sao_Paulo`
+  - Histórico de respostas habilitado (`Save responses in job history`).
+- **Pendência para ativação:** em 12/11/2026, `GET /health/ping` ainda
+  retornava `404` em produção porque o PR #84 (GOL-254) aponta para `develop` e
+  o Render faz deploy pela branch `main`. O job foi salvo **desativado** para
+  evitar desabilitação automática por falhas consecutivas até o release
+  `develop -> main`.
+
 ## Pontos em aberto
 
-1. Quantos serviços Free existem na workspace do Render da equipe e quantas
-   horas já foram usadas neste mês? Não foi possível consultar o painel nesta
-   spike. Com só a `hubee-api`, pingar 24 h cabe na cota (~744 de 750 horas).
-   Com mais serviços, é preciso restringir o horário.
-2. Quem é dono da conta do monitor externo e onde o acesso fica registrado?
+1. ~~Quantos serviços Free existem na workspace do Render da equipe e quantas
+   horas já foram usadas neste mês?~~ **Resolvido em 12/11/2026:** existe apenas
+   **1 serviço Free** (`hubee-api`), com **`12,18 h / 750 h`** consumidas no mês.
+2. ~~Quem é dono da conta do monitor externo e onde o acesso fica registrado?~~
+   **Resolvido em 12/11/2026:** conta no `cron-job.org` vinculada ao **e-mail
+   oficial da página/equipe** (configurada por Bianca Kimi).
 3. O Render não proíbe keep-alive na documentação do plano gratuito, mas a
    prática pode mudar. Vale reavaliar se a política de uso for atualizada.
-4. Falta validar o critério de aceite: abrir o `hubee-webpage` depois de 15
-   minutos sem uso, com o keep-alive ligado, e confirmar que não há timeout.
+4. Falta concluir a ativação e os testes após o deploy de `GET /health/ping` na
+   branch `main`: ativar o job no `cron-job.org`, confirmar execuções com status
+   `200` no histórico e abrir o `hubee-webpage` após 15 minutos sem uso (dentro
+   da janela das 07h às 23h) para confirmar que não há timeout.
 
 ## Referências
 
