@@ -92,22 +92,22 @@ Nenhum destes itens tem task aberta específica. Os critérios de severidade sã
 | [BUG-04](#já-corrigidos) | Alta | API · Banco | Bancos migrados antes da `0000` ser regerada não migram | Corrigido ([GOL-213](https://es-unifesp.youtrack.cloud/issue/GOL-213)) |
 | [BUG-05](#já-corrigidos) | Média | API · Pedido | Cancelar pedido pago mantém o ingresso válido e libera o saldo | Corrigido ([GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214)) |
 | [BUG-06](#já-corrigidos) | Média | API · Pedido | ADMIN marca pedido como pago sem pagamento nem ingressos | Corrigido ([GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214)) |
-| [BUG-07](#bug-07) | Média | API · Pagamento | O estorno não altera o pedido nem os ingressos | Reproduzido |
+| [BUG-07](#bug-07) | Média | API · Pagamento | O estorno não altera o pedido nem os ingressos | Em andamento ([GOL-215](https://es-unifesp.youtrack.cloud/issue/GOL-215)) |
 | [BUG-08](#já-corrigidos) | Média | API · Ingresso | A emissão manual de ingressos ignora o estoque | Corrigido ([GOL-216](https://es-unifesp.youtrack.cloud/issue/GOL-216)) |
 | [BUG-09](#já-corrigidos) | Média | API · Evento | Lotes de rascunho ficam visíveis para visitantes | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
 | [BUG-10](#já-corrigidos) | Média | API · Auth | O token continua valendo depois de excluir a conta | Corrigido ([GOL-218](https://es-unifesp.youtrack.cloud/issue/GOL-218)) |
 | [BUG-11](#bug-11) | Média | API · Auth | O login não limita tentativas | Reproduzido |
-| [BUG-12](#bug-12) | Média | API · Evento | Ingressos cancelados continuam contando como vendidos | Reproduzido |
-| [BUG-13](#bug-13) | Média | Web · Pedidos | Ingressos de evento encerrado ficam sem o evento | Reproduzido |
-| [BUG-14](#bug-14) | Média | Web · Pedidos | Pedido pendente aparece sem evento e sem ação | Reproduzido |
+| [BUG-12](#bug-12) | Média | API · Evento | Ingressos cancelados continuam contando como vendidos | Em andamento ([GOL-215](https://es-unifesp.youtrack.cloud/issue/GOL-215)) |
+| [BUG-13](#bug-13) | Média | Web · Pedidos | Ingressos de evento encerrado ficam sem o evento | Em andamento ([GOL-220](https://es-unifesp.youtrack.cloud/issue/GOL-220)) |
+| [BUG-14](#bug-14) | Média | Web · Pedidos | Pedido pendente aparece sem evento e sem ação | Em andamento ([GOL-220](https://es-unifesp.youtrack.cloud/issue/GOL-220)) |
 | [BUG-15](#já-corrigidos) | Baixa | API · Lote | Excluir lote com vendas responde `500` | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
 | [BUG-16](#já-corrigidos) | Baixa | API · Lote | A capacidade do lote pode ficar abaixo do vendido | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
-| [BUG-17](#bug-17) | Baixa | Web · Perfil | O front aceita senha de 8 a 72 caracteres, e a API só de 6 a 20 | Reproduzido |
+| [BUG-17](#bug-17) | Baixa | Web · Perfil | O front aceita senha de 8 a 72 caracteres, e a API só de 6 a 20 | Em andamento ([GOL-219](https://es-unifesp.youtrack.cloud/issue/GOL-219)) |
 | [BUG-18](#bug-18) | Baixa | API · Testes | `tsc` acusa 7 erros em specs | Reproduzido |
 | [BUG-19](#bug-19) | Baixa | Web · Eventos | Categorias fora das seis conhecidas viram "Outros" | Reproduzido |
 | [BUG-20](#bug-20) | Baixa | Web · Rotas | Rota inexistente manda o visitante para o login | Reproduzido |
 | [BUG-21](#bug-21) | Baixa | Web · Mobile | O menu do card em Meus Eventos fica cortado | Reproduzido |
-| [BUG-22](#bug-22) | Baixa | Web · Network | Meus Pedidos faz uma requisição por pedido e gera `404` | Reproduzido |
+| [BUG-22](#bug-22) | Baixa | Web · Network | Meus Pedidos faz uma requisição por pedido e gera `404` | Em andamento ([GOL-220](https://es-unifesp.youtrack.cloud/issue/GOL-220)) |
 | [BUG-23](#bug-23) | Baixa | Web · Auth | O interceptor de 401 verifica `/register`, não `/cadastro` | Leitura de código |
 | [BUG-24](#bug-24) | Baixa | Web · API | Dois clients HTTP com o mesmo nome | Leitura de código |
 | [BUG-25](#bug-25) | Baixa | Web · Next.js | `middleware.ts` é uma convenção depreciada | Reproduzido |
