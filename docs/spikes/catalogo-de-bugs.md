@@ -87,9 +87,9 @@ Nenhum destes itens tem task aberta específica. Os critérios de severidade sã
 | ID | Severidade | Área | Bug | Evidência |
 | --- | --- | --- | --- | --- |
 | [BUG-01](#bug-01) | Crítica | Web · Perfil | Quem se cadastra pelo site não consegue comprar | Reproduzido |
-| [BUG-02](#bug-02) | Alta | API · Pagamento | O checkout aceita pedido de evento cancelado | Reproduzido |
+| [BUG-02](#já-corrigidos) | Alta | API · Pagamento | O checkout aceita pedido de evento cancelado | Corrigido ([GOL-211](https://es-unifesp.youtrack.cloud/issue/GOL-211)) |
 | [BUG-03](#já-corrigidos) | Alta | API · Pedido | Pedido pendente reserva o lote para sempre | Corrigido ([GOL-212](https://es-unifesp.youtrack.cloud/issue/GOL-212)) |
-| [BUG-04](#bug-04) | Alta | API · Banco | Bancos migrados antes da `0000` ser regerada não migram | Reproduzido em 29/10 |
+| [BUG-04](#já-corrigidos) | Alta | API · Banco | Bancos migrados antes da `0000` ser regerada não migram | Corrigido ([GOL-213](https://es-unifesp.youtrack.cloud/issue/GOL-213)) |
 | [BUG-05](#já-corrigidos) | Média | API · Pedido | Cancelar pedido pago mantém o ingresso válido e libera o saldo | Corrigido ([GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214)) |
 | [BUG-06](#já-corrigidos) | Média | API · Pedido | ADMIN marca pedido como pago sem pagamento nem ingressos | Corrigido ([GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214)) |
 | [BUG-07](#bug-07) | Média | API · Pagamento | O estorno não altera o pedido nem os ingressos | Reproduzido |
@@ -138,50 +138,6 @@ completar perfil só mostra "Em breve" e a API responde `403`
 **Correção sugerida:** implementar a página com `PATCH /users/me`, que já aceita
 `cpf` e `birthDate`, e preencher esses campos no seed. A GOL-177 não resolve este
 item: o PR #51 o lista como fora do escopo.
-
-### BUG-02
-
-**O checkout aceita pedido de evento cancelado**
-
-- **Severidade:** Alta · **Evidência:** Reproduzido
-- **Onde:** `src/payment/payment.service.ts` (`checkout`)
-
-**Passos**
-
-1. Criar um pedido pendente.
-2. Como ADMIN, passar o evento para `cancelled`.
-3. Chamar `POST /payments` com o pedido.
-
-**Obtido:** `201`, com pagamento `confirmado` e ingresso emitido.
-
-**Esperado:** `422`, sem cobrança nem ingresso. Cancelar um evento também precisa
-definir o destino dos pedidos e ingressos, que hoje continuam como estão.
-
-**Correção sugerida:** revalidar o evento dentro da transaction do checkout, com
-a mesma regra de `isOnSale`.
-
-### BUG-04
-
-**Bancos migrados antes da `0000` ser regerada não migram**
-
-- **Severidade:** Alta · **Evidência:** Reproduzido em 29/10 num banco local
-  antigo. Não foi retestado em 02/11. Em banco novo, as migrations passam.
-- **Onde:** `src/database/migrations/meta/_journal.json`
-
-**Passos:** rodar `npm run db:migrate` num banco criado antes da `0000` ser
-regerada.
-
-**Obtido:** falha com `type "order_status" already exists`.
-
-**Esperado:** apenas as migrations pendentes são aplicadas.
-
-**Correção sugerida:**
-
-- Conferir o Neon antes de migrar a produção:
-  `select id, created_at from drizzle.__drizzle_migrations order by id;`.
-- Recriar os bancos de desenvolvimento.
-- Num banco com dados, alinhar o `created_at` da `0000` com o `when` do journal,
-  depois de confirmar que o schema bate.
 
 ## Médios
 
@@ -396,7 +352,9 @@ atual, ou foram corrigidos nas tasks subsequentes do YouTrack.
 | O cliente definia o valor do pedido, e o pedido não tinha itens | GOL-175: o pedido tem itens, e o total é calculado no servidor |
 | A compra ignorava o estoque do lote | GOL-175: o saldo é validado em transaction. A emissão manual continua no [BUG-08](#já-corrigidos) |
 | A migration `0002` falhava em bancos com lotes | GOL-164: `DEFAULT 0` na `0002` e criação da `0004` |
+| **BUG-02:** O checkout aceita pedido de evento cancelado | [GOL-211](https://es-unifesp.youtrack.cloud/issue/GOL-211): revalidação dos eventos do pedido em transação (`FOR SHARE` e `isOnSale`) no checkout, retornando `422` se cancelado ou fora de venda |
 | **BUG-03:** Pedido pendente reserva o lote para sempre | [GOL-212](https://es-unifesp.youtrack.cloud/issue/GOL-212): expiração de reservas de pedidos pendentes em 15 minutos e validação de saldo no checkout |
+| **BUG-04:** Bancos migrados antes da `0000` ser regerada não migram | [GOL-213](https://es-unifesp.youtrack.cloud/issue/GOL-213): migrations `0000` a `0005` tornadas idempotentes (`IF [NOT] EXISTS` e blocos `DO … EXCEPTION WHEN duplicate_object`) para reaplicação segura em bancos existentes |
 | **BUG-05:** Cancelar pedido pago mantém o ingresso válido e libera o saldo | [GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214): máquina de estados para pedidos; cancelamento invalida ingressos e ajusta saldo em transaction |
 | **BUG-06:** ADMIN marca pedido como pago sem pagamento nem ingressos | [GOL-214](https://es-unifesp.youtrack.cloud/issue/GOL-214): remoção de `totalAmount` do DTO de atualização e transição para `pago` restrita ao checkout |
 | **BUG-08:** A emissão manual de ingressos ignora o estoque | [GOL-216](https://es-unifesp.youtrack.cloud/issue/GOL-216): validação de estoque, capacidade e itens do pedido na emissão manual |
@@ -422,9 +380,9 @@ Para discutir com o time:
 
 1. **Liberar a venda:** verificar o PR da GOL-177 e abrir uma task para o
    [BUG-01](#bug-01).
-2. **Proteger a compra:** abrir uma task para o [BUG-02](#bug-02) e o
+2. **Proteger a compra:** abrir uma task para o [BUG-02](#já-corrigidos) e o
    [BUG-03](#já-corrigidos).
-3. **Conferir o Neon** ([BUG-04](#bug-04)) antes de migrar a produção.
+3. **Conferir o Neon** ([BUG-04](#já-corrigidos)) antes de migrar a produção.
 4. **Regras de estado:** agrupar o [BUG-05](#já-corrigidos), o [BUG-06](#já-corrigidos), o
    [BUG-07](#bug-07), o [BUG-08](#já-corrigidos) e o [BUG-12](#bug-12) numa task de
    pedidos, estornos e ingressos.
