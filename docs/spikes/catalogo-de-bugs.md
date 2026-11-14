@@ -42,7 +42,7 @@ reproduzir, o resultado obtido e o resultado esperado.
 | Verificação | `hubee-api` | `hubee-webpage` |
 | --- | --- | --- |
 | Lint | Passa | Passa |
-| `tsc --noEmit` | **7 erros** ([BUG-18](#bug-18)) | Passa |
+| `tsc --noEmit` | **7 erros** ([BUG-18](#já-corrigidos)) | Passa |
 | Testes | 946 de 946 passam (`--runInBand`) | 90 de 90 passam |
 | Build | Não executado | Passa, com aviso ([BUG-25](#bug-25)) |
 | Migrations em banco novo | Passam | Não se aplica |
@@ -96,14 +96,14 @@ Nenhum destes itens tem task aberta específica. Os critérios de severidade sã
 | [BUG-08](#já-corrigidos) | Média | API · Ingresso | A emissão manual de ingressos ignora o estoque | Corrigido ([GOL-216](https://es-unifesp.youtrack.cloud/issue/GOL-216)) |
 | [BUG-09](#já-corrigidos) | Média | API · Evento | Lotes de rascunho ficam visíveis para visitantes | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
 | [BUG-10](#já-corrigidos) | Média | API · Auth | O token continua valendo depois de excluir a conta | Corrigido ([GOL-218](https://es-unifesp.youtrack.cloud/issue/GOL-218)) |
-| [BUG-11](#bug-11) | Média | API · Auth | O login não limita tentativas | Reproduzido |
+| [BUG-11](#bug-11) | Média | API · Auth | O login não limita tentativas | Em andamento ([GOL-219](https://es-unifesp.youtrack.cloud/issue/GOL-219)) |
 | [BUG-12](#bug-12) | Média | API · Evento | Ingressos cancelados continuam contando como vendidos | Em andamento ([GOL-215](https://es-unifesp.youtrack.cloud/issue/GOL-215)) |
 | [BUG-13](#bug-13) | Média | Web · Pedidos | Ingressos de evento encerrado ficam sem o evento | Em andamento ([GOL-220](https://es-unifesp.youtrack.cloud/issue/GOL-220)) |
 | [BUG-14](#bug-14) | Média | Web · Pedidos | Pedido pendente aparece sem evento e sem ação | Em andamento ([GOL-220](https://es-unifesp.youtrack.cloud/issue/GOL-220)) |
 | [BUG-15](#já-corrigidos) | Baixa | API · Lote | Excluir lote com vendas responde `500` | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
 | [BUG-16](#já-corrigidos) | Baixa | API · Lote | A capacidade do lote pode ficar abaixo do vendido | Corrigido ([GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217)) |
 | [BUG-17](#bug-17) | Baixa | Web · Perfil | O front aceita senha de 8 a 72 caracteres, e a API só de 6 a 20 | Em andamento ([GOL-219](https://es-unifesp.youtrack.cloud/issue/GOL-219)) |
-| [BUG-18](#bug-18) | Baixa | API · Testes | `tsc` acusa 7 erros em specs | Reproduzido |
+| [BUG-18](#já-corrigidos) | Baixa | API · Testes | `tsc` acusa 7 erros em specs | Corrigido ([GOL-223](https://es-unifesp.youtrack.cloud/issue/GOL-223)) |
 | [BUG-19](#bug-19) | Baixa | Web · Eventos | Categorias fora das seis conhecidas viram "Outros" | Reproduzido |
 | [BUG-20](#bug-20) | Baixa | Web · Rotas | Rota inexistente manda o visitante para o login | Reproduzido |
 | [BUG-21](#bug-21) | Baixa | Web · Mobile | O menu do card em Meus Eventos fica cortado | Reproduzido |
@@ -251,18 +251,6 @@ itens a partir dos ingressos.
 - **Esperado:** a mesma regra nos dois lados. O limite de 72 faz sentido por causa
   do bcrypt.
 
-### BUG-18
-
-**`tsc` acusa 7 erros em specs**
-
-- **Onde:** `src/auth/guards/guards.spec.ts`,
-  `src/auth/route-protection.spec.ts` (2), `src/event/event.integration.spec.ts`,
-  `src/order/order.service.spec.ts`, `src/task/task.service.spec.ts` e
-  `src/ticket-type/ticket-type.service.spec.ts`
-- **Passos:** rodar `npx tsc --noEmit` na `hubee-api`.
-- **Obtido:** falha com 7 erros, embora lint e testes passem.
-- **Esperado:** nenhum erro, com o `tsc` incluído no CI.
-
 ### BUG-19
 
 **Categorias fora das seis conhecidas viram "Outros"**
@@ -362,6 +350,7 @@ atual, ou foram corrigidos nas tasks subsequentes do YouTrack.
 | **BUG-10:** O token continua valendo depois de excluir a conta | [GOL-218](https://es-unifesp.youtrack.cloud/issue/GOL-218): validação de usuário ativo e não excluído (`deleted_at is null`) no JWT Auth Guard |
 | **BUG-15:** Excluir lote com vendas responde `500` | [GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217): exclusão de lote com ingressos vinculados retorna `409 Conflict` com mensagem descritiva |
 | **BUG-16:** A capacidade do lote pode ficar abaixo do vendido | [GOL-217](https://es-unifesp.youtrack.cloud/issue/GOL-217): atualização de capacidade valida quantidade mínima contra ingressos vendidos e reservados (`422`) |
+| **BUG-18:** `tsc` acusa 7 erros em specs | [GOL-223](https://es-unifesp.youtrack.cloud/issue/GOL-223): correção dos erros de tipagem nos specs e execução do `tsc` e testes no CI |
 
 ## Funcionalidades incompletas
 
