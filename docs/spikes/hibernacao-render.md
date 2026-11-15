@@ -155,7 +155,7 @@ keep-alive no **cron-job.org**:
 - **Conta e acesso ao cron-job.org:** criada com o **e-mail oficial da
   página/equipe** Hubee; acesso
   compartilhado entre os membros que administram o e-mail da página, sem
-  credenciais armazenadas no repositório).
+  compartilhado entre os membros que administram o e-mail da página, sem credenciais armazenadas no repositório.
 - **Parâmetros do job:**
   - Método e URL: `GET https://hubee-api-1.onrender.com/health/ping`
   - Expressão cron (`Custom`): `*/10 7-22 * * *` (minutos `0, 10, 20, 30, 40,
