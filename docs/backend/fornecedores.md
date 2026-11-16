@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
 title: Fornecedores
-description: Contratos de API, controle de acesso de organizador (@OrganizerOnly), filtros de busca e avaliações de fornecedores em /suppliers (GOL-202, GOL-245, GOL-246 e GOL-250).
+description: Contratos de API, controle de acesso de organizador (@OrganizerOnly), filtros de busca e avaliações de fornecedores em /suppliers (GOL-202, GOL-245, GOL-246, GOL-250 e GOL-251).
 ---
 
 # Fornecedores
@@ -104,6 +104,63 @@ Retorna todos os fornecedores ativos (`deleted_at IS NULL`) com a média arredon
 curl -H "Authorization: Bearer <TOKEN_ORGANIZADOR>" \
   "http://localhost:3000/suppliers?search=Sabor&category=Buffet&minRating=4&sortBy=rating"
 ```
+
+#### Fornecedores Bem Avaliados (`minRating` + `sortBy=rating`)
+
+Combinar `minRating` e `sortBy=rating` retorna o ranking dos fornecedores mais bem avaliados:
+
+```bash
+curl -H "Authorization: Bearer <TOKEN_ORGANIZADOR>" \
+  "http://localhost:3000/suppliers?sortBy=rating&minRating=4"
+```
+
+- **Filtro:** `minRating` compara com a média arredondada em 1 casa decimal. Fornecedores sem avaliações (`ratingAverage: null`) nunca atendem ao filtro e ficam fora do resultado.
+- **Ordenação:** `ratingAverage` decrescente. Em caso de empate, vale a maior `ratingCount` e, persistindo o empate, `companyName` em ordem alfabética.
+- **Sem `sortBy`:** a ordem dos resultados não é garantida. Os valores `companyName` (A–Z) e `createdAt` (mais recentes primeiro) também são aceitos.
+
+#### Resposta de Sucesso (`200 OK` — `SupplierResponseDto[]`)
+
+Além dos dados cadastrais, cada fornecedor traz os campos agregados de avaliação:
+
+| Campo | Tipo | Descrição |
+| :--- | :--- | :--- |
+| `ratingAverage` | `number \| null` | Média das notas (1 a 5) com 1 casa decimal, ou `null` quando não há avaliações. |
+| `ratingCount` | `number` | Quantidade total de avaliações recebidas (`0` quando não há). |
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "companyName": "Buffet Sabor Real",
+    "cnpjCpf": "11222333000181",
+    "phone": "11988887777",
+    "email": "contato@saborreal.com.br",
+    "category": "Buffet",
+    "ratingAverage": 4.8,
+    "ratingCount": 12,
+    "createdAt": "2026-11-05T19:00:00.000Z",
+    "updatedAt": "2026-11-05T19:00:00.000Z"
+  },
+  {
+    "id": "f0e1d2c3-b4a5-4968-8776-655443322110",
+    "companyName": "Som e Luz Eventos",
+    "cnpjCpf": "22333444000155",
+    "phone": null,
+    "email": null,
+    "category": "Som e iluminação",
+    "ratingAverage": 4.2,
+    "ratingCount": 5,
+    "createdAt": "2026-11-06T10:00:00.000Z",
+    "updatedAt": "2026-11-06T10:00:00.000Z"
+  }
+]
+```
+
+#### Respostas de Erro
+
+- **`400 Bad Request`:** `minRating` não numérico ou fora do intervalo de `1` a `5`, ou `sortBy` fora de `rating`, `companyName` e `createdAt`.
+- **`401 Unauthorized`:** Token JWT ausente, inválido ou expirado.
+- **`403 Forbidden`:** Usuário sem vínculo ativo como organizador nem papel `ADMIN`.
 
 ---
 
@@ -293,6 +350,7 @@ A pasta `FORNECEDORES/` no repositório [`hubee-collections`](./collections.md) 
 
 1. `POST CRIAR FORNECEDOR.yml` — Cadastra o fornecedor e salva o `id` em `{{supplierId}}`.
 2. `GET LISTAR FORNECEDORES.yml` — Lista fornecedores ativos (com filtros opcionais).
+   - `GET LISTAR FORNECEDORES BEM AVALIADOS.yml` — Lista em `GET /suppliers?sortBy=rating&minRating=4` os fornecedores com nota mínima 4, da maior média para a menor, e valida `ratingAverage` e a ordenação.
 3. `GET BUSCAR FORNECEDOR.yml` — Detalha `{{supplierId}}`.
 4. `PATCH ATUALIZAR FORNECEDOR.yml` — Atualiza os dados do fornecedor `{{supplierId}}`.
 5. `POST AVALIAR FORNECEDOR.yml` — Registra ou atualiza a avaliação do organizador autenticado em `POST /suppliers/:id/reviews` (`201` ou `200`).
