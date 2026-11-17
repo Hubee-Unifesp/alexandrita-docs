@@ -31,7 +31,7 @@ arquitetura, padrões de UI, decisões técnicas e guias de setup.
 src/
   app/          # rotas e páginas (Next.js App Router)
   hooks/        # hooks React reutilizáveis (ex.: useHealthCheck)
-  lib/api/      # cliente HTTP e chamadas à API (client.ts, health.ts)
+  lib/api/      # cliente HTTP e chamadas à API (apiClient.ts, health.ts)
 ```
 
 ## Variáveis de ambiente

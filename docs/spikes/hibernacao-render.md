@@ -6,7 +6,9 @@ sidebar_position: 6
 
 ## Status
 
-Proposta para validação do time (GOL-225). Nenhum código foi alterado. Os
+Proposta para validação do time (GOL-225). O `GET /health/ping` foi criado na
+GOL-254 e a resiliência no front (alternativa 4) foi feita na GOL-256, descrita
+em [Cold start da API](../frontend/cold-start-api.md). Os
 limites dos serviços são de novembro de 2026 e mudam com frequência; conferir
 nos sites dos provedores antes de configurar.
 
