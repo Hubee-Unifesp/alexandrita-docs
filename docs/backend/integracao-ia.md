@@ -18,7 +18,7 @@ API, como configurar cada ambiente e o que limita o uso e o custo.
 | **GOL-281** | Limite de gerações por usuário, teto de tokens, `effort` configurável e log de consumo. |
 | **GOL-282** | Chave de produção e esta documentação. |
 
-A rota que expõe o rascunho (`POST /events/ai-draft`) é da **GOL-263**.
+A rota que expõe o rascunho (`POST /events/ai-draft`) é da **GOL-263**; o contrato dela está em [Gerenciamento de Eventos e Lotes](./eventos-e-lotes.md#35-gerar-rascunho-com-ia-post-eventsai-draft).
 
 ## Como a chamada funciona
 
