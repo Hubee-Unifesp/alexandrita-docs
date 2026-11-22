@@ -131,6 +131,10 @@ inválida, a API não sobe e o erro aponta qual é.
 | `DB_SSL`      | `true` para o Neon (exige TLS), `false` para Postgres local  |
 | `JWT_SECRET`  | Segredo obrigatório para assinar e verificar tokens JWT       |
 | `CORS_ORIGINS`| Origens permitidas no CORS, separadas por vírgula            |
+| `ANTHROPIC_API_KEY` | Chave da Anthropic para as rotas de IA (opcional; sem ela, essas rotas respondem `503`) |
+
+As demais variáveis de IA (`ANTHROPIC_MODEL`, `AI_*`) têm valores padrão e
+estão descritas em [Integração com IA](./integracao-ia.md).
 
 Veja [`.env.example`](https://github.com/Hubee-Unifesp/hubee-api/blob/main/.env.example)
 no repositório do backend.

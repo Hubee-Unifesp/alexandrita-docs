@@ -32,15 +32,21 @@ flowchart LR
         D[("<b>PostgreSQL</b>")]
     end
 
+    subgraph EXT["Serviços externos"]
+        C["<b>Claude</b><br/>Anthropic · API de IA"]
+    end
+
     U -. "① descobre o IP<br/>de cada domínio" .-> DNS
     U -- "② HTTPS<br/>baixa HTML, JS e CSS" --> W
     U -- "③ HTTPS · JSON<br/>token JWT no cabeçalho" --> A
     A -- "④ SQL sobre TLS<br/>Drizzle · driver pg" --> D
+    A -. "⑤ HTTPS · só nas rotas de IA<br/>SDK da Anthropic" .-> C
 ```
 
 Cada camada só conversa com a vizinha. O navegador nunca fala com o banco, e
 a Webpage não fica no meio das chamadas à API: depois que as páginas chegam ao
-navegador, é o JavaScript dele que chama a API.
+navegador, é o JavaScript dele que chama a API. O mesmo vale para a IA: só a
+API chama o Claude, e a chave da Anthropic nunca chega ao navegador.
 
 | Camada | Componente | Repositório | Tecnologia | Onde roda | Papel |
 | --- | --- | --- | --- | --- | --- |
@@ -48,6 +54,7 @@ navegador, é o JavaScript dele que chama a API.
 | Web | Webpage | `hubee-webpage` | Next.js, React | Vercel | Entrega as páginas (HTML, JS, CSS). Não guarda dados. |
 | Aplicação | API | `hubee-api` | NestJS, Drizzle ORM | Render | Regras de negócio, validação e autenticação. |
 | Dados | Banco de dados | — | PostgreSQL | Neon | Guarda os dados da plataforma. |
+| Externo | IA | — | Claude | Anthropic | Gera rascunhos de evento a partir de texto. Só a API fala com ele. Veja [Integração com IA](../backend/integracao-ia.md). |
 
 ## Como as partes conversam
 
@@ -183,6 +190,7 @@ código:
 | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | API | Conexão com o PostgreSQL. |
 | `DB_SSL` | API | `true` no Neon, que exige TLS; `false` no Postgres local. |
 | `JWT_SECRET` | API | Assina e verifica os tokens. |
+| `ANTHROPIC_API_KEY` | API | Autentica as chamadas ao Claude. Sem ela, as rotas de IA respondem `503`. |
 
 Em desenvolvimento local, a mesma estrutura roda na sua máquina: a Webpage e a
 API em `localhost` e o banco num container Docker. Veja
