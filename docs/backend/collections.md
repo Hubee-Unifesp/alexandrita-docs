@@ -78,6 +78,7 @@ INGRESSOS/                # /tickets, /users/me/tickets e /orders/:orderId/ticke
 FORNECEDORES/             # CRUD de /suppliers
 DESPESAS DO EVENTO/       # /events/:eventId/expenses
 TAREFAS DO EVENTO/        # /events/:eventId/tasks
+NOTIFICACOES/             # /notifications (listagem, leitura individual e em massa)
 assets/                   # imagem de exemplo para os uploads
 environments/             # local e production
 ```
@@ -114,6 +115,14 @@ Consulte a documentação completa em [Gerenciamento de Eventos e Lotes de Ingre
 - **Consultar Ingressos (`GET /tickets`)**:
   - **Headers**: `Authorization: Bearer {{tokenComprador}}`
   - **Respostas**: `200 OK` trazendo a lista de ingressos com QR code criptográfico de 64 caracteres e dados aninhados de evento e lote.
+
+### Exemplos de Requisições de Notificações (`NOTIFICACOES/`)
+
+Consulte os contratos completos em [Notificações In-App](./notificacoes.md):
+
+- **`NOTIFICACOES/GET LISTAR NOTIFICACOES`** (`GET {{baseUrl}}/notifications`): lista as notificações do usuário logado (`data` + `unreadCount`), com parâmetros opcionais `unreadOnly`, `limit` e `offset`, e salva `{{notificationId}}`.
+- **`NOTIFICACOES/PATCH MARCAR NOTIFICACAO COMO LIDA`** (`PATCH {{baseUrl}}/notifications/:id/read`): marca a notificação `{{notificationId}}` como lida (`200 OK` com `readAt` preenchido; `404 Not Found` se pertencer a outro usuário).
+- **`NOTIFICACOES/PATCH MARCAR TODAS COMO LIDAS`** (`PATCH {{baseUrl}}/notifications/read-all`): marca todas as notificações não lidas do usuário autenticado como lidas (`200 OK` com `{ updatedCount }`).
 
 ## Convenções
 
