@@ -97,6 +97,13 @@ o fluxo completo do organizador: criação, edição, upload de capa, publicaç�
 cancelamento de eventos (`/events`), além do CRUD e controle de estoque de lotes
 de ingressos (`/events/:eventId/ticket-types`).
 
+## Notificações in-app
+
+Veja [Notificações In-App](./notificacoes.md) para o modelo da tabela
+`notifications`, os gatilhos transacionais de comprador e organizador
+(`payment_confirmed`, `order_cancelled`, `order_refunded`, `event_cancelled`,
+`new_sale` e `batch_sold_out`) e os contratos das rotas `/notifications`.
+
 ## Banco de dados
 
 - `src/database/schema/` — definição das tabelas (`index.ts` é o ponto de
