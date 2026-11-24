@@ -1,24 +1,25 @@
 ---
 sidebar_position: 10
 title: Integração com IA (Claude)
-description: Como obter e configurar a chave da Anthropic, as variáveis de IA da hubee-api, os controles de uso e custo e como rodar localmente sem chave (GOL-279 / GOL-280 / GOL-281 / GOL-282).
+description: Como obter e configurar a chave da Anthropic, as variáveis de IA da hubee-api, os controles de uso e custo e como rodar localmente sem chave (GOL-279 / GOL-281 / GOL-282 / GOL-291).
 ---
 
 # Integração com IA (Claude)
 
 A `hubee-api` usa o [Claude](https://platform.claude.com/docs), da Anthropic,
-para gerar o rascunho de um evento a partir de uma descrição em linguagem
-natural (história **GOL-226**). Esta página explica de onde vem a chave da
+no [assistente de criação de evento](./assistente-criacao-evento.md), que monta
+o rascunho de um evento numa conversa em linguagem natural (história
+**GOL-226**). Esta página explica de onde vem a chave da
 API, como configurar cada ambiente e o que limita o uso e o custo.
 
 | Task | O que entrega |
 | --- | --- |
 | **GOL-279** | Módulo `src/ai/` com o `AiService` e a integração com o SDK da Anthropic. |
-| **GOL-280** | Prompt, schema da saída estruturada e validação do rascunho de evento. |
 | **GOL-281** | Limite de gerações por usuário, teto de tokens, `effort` configurável e log de consumo. |
 | **GOL-282** | Chave de produção e esta documentação. |
+| **GOL-291** | Assistente de criação de evento (`POST /events/ai-assistant/turn`), que substituiu o rascunho de uma rodada só (GOL-263/GOL-280, removido na GOL-295). |
 
-A rota que expõe o rascunho (`POST /events/ai-draft`) é da **GOL-263**; o contrato dela está em [Gerenciamento de Eventos e Lotes](./eventos-e-lotes.md#35-gerar-rascunho-com-ia-post-eventsai-draft).
+A única rota que usa a IA hoje é `POST /events/ai-assistant/turn`; o contrato dela está em [Assistente de Criação de Evento com IA](./assistente-criacao-evento.md#contrato-post-eventsai-assistantturn).
 
 ## Como a chamada funciona
 
@@ -29,12 +30,12 @@ sequenceDiagram
     participant A as API (Render)
     participant C as Claude (Anthropic)
 
-    O->>A: POST /events/ai-draft { prompt }
+    O->>A: POST /events/ai-assistant/turn { draft, field, answer }
     A->>A: JwtAuthGuard + limite de gerações (429 se estourar)
-    A->>C: Messages API · prompt de sistema + descrição + JSON schema
-    C-->>A: JSON do rascunho
-    A->>A: Valida e normaliza o rascunho (503 se vier fora do schema)
-    A-->>O: 200 OK · rascunho editável (nada é salvo)
+    A->>C: Messages API · prompt de sistema + rascunho + mensagem + JSON schema
+    C-->>A: JSON com os dados informados
+    A->>A: Valida campo a campo e escolhe a próxima pergunta
+    A-->>O: 200 OK · rascunho atualizado e próxima pergunta (nada é salvo)
 ```
 
 A chave fica só na API. O navegador nunca fala com a Anthropic, e a Webpage
@@ -66,9 +67,8 @@ Não é preciso ter uma chave para desenvolver no backend:
 - **A API sobe normalmente.** Só as rotas de IA respondem
   `503 Service Unavailable` com a mensagem "A geração com IA não está
   disponível no momento. Tente novamente em instantes.".
-- **Os testes não usam a chave.** `npm run test` simula o provedor de IA com
-  respostas prontas (as fixtures em `src/event/ai-draft/__fixtures__/`), então
-  a suíte roda sem rede e sem custo.
+- **Os testes não usam a chave.** `npm run test` substitui o `AiService` por
+  um mock com respostas prontas, então a suíte roda sem rede e sem custo.
 
 Para testar a geração de verdade na sua máquina, peça uma chave de
 desenvolvimento a quem administra a organização da Anthropic e coloque no seu
@@ -120,7 +120,7 @@ espere o mês virar.
 4. Salve com nova implantação. A API só lê as variáveis no boot, então a chave
    passa a valer depois do deploy.
 
-Para conferir, gere um rascunho pela rota de IA com um usuário organizador. Se
+Para conferir, mande uma mensagem ao assistente com um usuário organizador. Se
 a resposta for `503` com a mensagem de IA indisponível, a chave não foi lida:
 verifique o nome da variável e se o deploy terminou.
 
@@ -145,7 +145,7 @@ mais amplo:
 Cada chamada gera uma linha no log da API, sem o texto do prompt:
 
 ```text
-feature=event-ai-draft model=claude-opus-5-5 effort=medium stop_reason=end_turn input_tokens=1830 output_tokens=612 cache_creation_tokens=0 cache_read_tokens=0
+feature=event-ai-assistant model=claude-opus-5-5 effort=medium stop_reason=end_turn input_tokens=1830 output_tokens=612 cache_creation_tokens=0 cache_read_tokens=0
 ```
 
 - `feature` diz qual funcionalidade fez a chamada.

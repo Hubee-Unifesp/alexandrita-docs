@@ -1,12 +1,12 @@
 ---
 sidebar_position: 9
 title: Gerenciamento de Eventos e Lotes de Ingressos
-description: Fluxo completo do organizador, contratos de API, ciclo de vida de eventos (/events), upload de foto de capa, rascunho com IA (POST /events/ai-draft), CRUD e estoque de lotes (/events/:eventId/ticket-types) e regras RBAC (GOL-147 / GOL-206 / GOL-207 / GOL-212 / GOL-221 / GOL-263).
+description: Fluxo completo do organizador, contratos de API, ciclo de vida de eventos (/events), upload de foto de capa, assistente de criação com IA (POST /events/ai-assistant/turn), CRUD e estoque de lotes (/events/:eventId/ticket-types) e regras RBAC (GOL-147 / GOL-206 / GOL-207 / GOL-212 / GOL-221 / GOL-291).
 ---
 
 # Gerenciamento de Eventos e Lotes de Ingressos
 
-Os módulos de **eventos** (`/events`) e **lotes de ingressos** (`/events/:eventId/ticket-types`) da `hubee-api` permitem que membros autorizados de uma [organização](./organizacoes.md) conduzam todo o ciclo de vida de um evento — desde o cadastro do local e rascunho inicial, envio da imagem de capa e configuração de lotes com controle de estoque, até a publicação na vitrine ou o cancelamento administrativo (tasks **GOL-147**, **GOL-206**, **GOL-207**, **GOL-212**, **GOL-216** e **GOL-221**). O organizador também pode gerar um rascunho do evento e dos lotes com IA a partir de uma descrição em texto (**GOL-263**), sem salvar nada.
+Os módulos de **eventos** (`/events`) e **lotes de ingressos** (`/events/:eventId/ticket-types`) da `hubee-api` permitem que membros autorizados de uma [organização](./organizacoes.md) conduzam todo o ciclo de vida de um evento — desde o cadastro do local e rascunho inicial, envio da imagem de capa e configuração de lotes com controle de estoque, até a publicação na vitrine ou o cancelamento administrativo (tasks **GOL-147**, **GOL-206**, **GOL-207**, **GOL-212**, **GOL-216** e **GOL-221**). O organizador também pode criar o evento conversando com um [assistente de IA](./assistente-criacao-evento.md) (**GOL-291** a **GOL-295**), que pergunta o que falta até o rascunho ficar completo.
 
 Para a busca pública paginada e o detalhamento público do evento, consulte também:
 - [Busca de eventos (`GET /events`)](./busca-eventos.md)
@@ -65,7 +65,7 @@ A autorização nas rotas de gerenciamento é aplicada pelo decorator `@OrgAcces
 | `POST` | `/events` | `@OrgAccess('write', { from: 'body', field: 'organizerId' })` | Membro `write`/`manage` da organização indicada em `organizerId` ou `ADMIN` | `403 Forbidden` | `403 Forbidden` (membro `read`) |
 | `PATCH` | `/events/:id` | `@OrgAccess('write', { from: 'event', param: 'id' })` | Membro `write`/`manage` da organização dona do evento ou `ADMIN` | **`404 Not Found`** | **`403 Forbidden`** (membro `read`) |
 | `PATCH` | `/events/:id/photo` | `@OrgAccess('write', { from: 'event', param: 'id' })` | Membro `write`/`manage` da organização dona do evento ou `ADMIN` (`GOL-221`) | **`404 Not Found`** | **`403 Forbidden`** (membro `read`) |
-| `POST` | `/events/ai-draft` | `@AiRateLimited()` + `@OrganizerOnly()` | Membro aceito de **qualquer** organização ou `ADMIN` (`GOL-263`), com limite de gerações por usuário | `403 Forbidden` | — (qualquer nível serve) |
+| `POST` | `/events/ai-assistant/turn` | `@AiRateLimited()` + `@OrganizerOnly()` | Membro aceito de **qualquer** organização ou `ADMIN` (`GOL-291`), com limite de gerações por usuário | `403 Forbidden` | — (qualquer nível serve) |
 | `DELETE` | `/events/:id` | `@OrgAccess('manage', { from: 'event', param: 'id' })` | Apenas administrador da organização (`manage`) ou `ADMIN` global | **`404 Not Found`** | **`403 Forbidden`** (membro `read` ou `write`) |
 | `POST` | `/events/:eventId/ticket-types` | `@OrgAccess('write', { from: 'event', param: 'eventId' })` | Membro `write`/`manage` da organização dona do evento ou `ADMIN` (`GOL-206`) | **`404 Not Found`** | **`403 Forbidden`** (membro `read`) |
 | `GET` | `/events/:eventId/ticket-types` | `OptionalJwtAuthGuard` | Público se evento `published`; restrito a membros da org (`read`/`write`/`manage`) ou `ADMIN` nos demais status | **`404 Not Found`** (se não `published`) | — |
@@ -217,101 +217,11 @@ Cancela o evento alterando seu `status` para `'cancelled'` (não remove a linha 
 
 ---
 
-### 3.5. Gerar Rascunho com IA (`POST /events/ai-draft`)
+### 3.5. Assistente de Criação com IA (`POST /events/ai-assistant/turn`)
 
-Recebe a descrição do evento em linguagem natural e devolve um rascunho estruturado do evento e dos lotes, gerado pelo Claude (Anthropic). **Nada é salvo nem publicado:** o rascunho preenche o formulário de criação, o organizador revisa e edita, e o evento só passa a existir com o [`POST /events`](#31-criar-evento-post-events). Também não cria local: `venueSuggestion` é só uma sugestão para o organizador escolher ou cadastrar o local.
+O organizador pode montar o evento numa conversa com IA: o assistente pergunta o que falta, uma pergunta por vez, e só termina quando os dados obrigatórios do [`POST /events`](#31-criar-evento-post-events) estão completos. Cada rodada é uma chamada a `POST /events/ai-assistant/turn`, que **não salva nada**. Ao fim, o front cria o local (se for novo), o evento em `draft` e os lotes com as rotas desta página.
 
-- **Autorização:** `@OrganizerOnly()` (membro aceito de qualquer organização, ou `ADMIN`) e `@AiRateLimited()` (limite de gerações por usuário). Quem não é organizador recebe `403` sem gastar a cota.
-- **Resposta:** `200 OK`, já que nada é criado.
-- **Configuração:** chave da Anthropic, limites e custo estão em [Integração com IA](./integracao-ia.md).
-
-#### Corpo da Requisição (`GenerateEventDraftDto`)
-
-| Campo | Tipo | Obrigatório | Validação e Regras |
-| :--- | :--- | :---: | :--- |
-| `prompt` | `string` | Sim | Descrição do evento em texto livre, com no máximo 2000 caracteres. Espaços nas pontas são removidos antes da validação. |
-
-Qualquer outro campo no corpo responde `400` (`property <campo> should not exist`).
-
-#### Exemplo de Payload (`POST /events/ai-draft`)
-
-```json
-{
-  "prompt": "Festa Junina da Engenharia, 3ª edição, no sábado que vem das 20h às 2h no Ginásio da Unifesp, Rua Talim 330, São José dos Campos - SP. Proibido para menores de 18. 1º lote inteira a R$ 30 e meia-entrada, 200 ingressos de cada."
-}
-```
-
-#### Resposta de Sucesso (`200 OK` — `EventAiDraftResponseDto`)
-
-```json
-{
-  "name": "Festa Junina da Engenharia",
-  "description": "A Festa Junina da Engenharia chega à 3ª edição no Ginásio da Unifesp, em São José dos Campos. A festa vai das 20h às 2h e é proibida para menores de 18 anos.",
-  "category": "festas",
-  "ageRating": "18",
-  "edition": "3ª edição",
-  "startDate": "2026-11-28T20:00:00-03:00",
-  "endDate": "2026-11-29T02:00:00-03:00",
-  "venueSuggestion": {
-    "name": "Ginásio da Unifesp",
-    "address": "Rua Talim, 330",
-    "city": "São José dos Campos",
-    "state": "SP"
-  },
-  "suggestedTicketTypes": [
-    { "batch": "1º lote", "price": 30, "quantity": 200, "modality": "inteira" },
-    { "batch": "1º lote", "price": 15, "quantity": 200, "modality": "meia" }
-  ],
-  "missingFields": []
-}
-```
-
-| Campo | Tipo | Conteúdo |
-| :--- | :--- | :--- |
-| `name` | `string \| null` | Nome do evento. Sem nome explícito, a IA cria um título curto e fiel à descrição. Até 255 caracteres. |
-| `description` | `string \| null` | Texto de divulgação em pt-BR, só com fatos da descrição. |
-| `category` | `'festas' \| 'shows' \| 'palestras' \| 'esportes' \| 'academicos' \| 'outros' \| null` | Sempre um valor de `EVENT_CATEGORIES`. |
-| `ageRating` | `'L' \| '10' \| '12' \| '14' \| '16' \| '18' \| null` | Preenchido só quando a descrição fala de restrição de idade. |
-| `edition` | `string \| null` | Preenchido só quando a descrição cita a edição. Até 100 caracteres. |
-| `startDate`, `endDate` | `string (ISO 8601 com fuso) \| null` | Datas relativas ("sábado que vem") são resolvidas a partir da data atual em `America/Sao_Paulo`. Sem horário, o campo fica `null`. `endDate` é sempre posterior a `startDate`. |
-| `venueSuggestion` | `object \| null` | `{ name, address, city, state }`, cada parte `string \| null`. `state` é sempre a sigla da UF (`SP`). `null` quando nenhum local é citado. |
-| `suggestedTicketTypes` | `array` | Um item por lote citado: `batch` (`string`, até 100), `price` (`number \| null`, em reais, até 2 casas, `0` para evento gratuito), `quantity` (`integer \| null`) e `modality` (`'inteira' \| 'meia' \| 'estudante' \| 'vip' \| 'cortesia' \| null`). Lista vazia quando a descrição não fala de ingressos. |
-| `missingFields` | `string[]` | Campos que a IA não conseguiu inferir e o organizador precisa revisar. |
-
-Os campos seguem os mesmos valores aceitos por `CreateEventDto` e `CreateTicketTypeDto`, então o rascunho pode ir para o formulário sem conversão. O que falta para criar o evento de verdade (`organizerId`, `venueId` e as datas que vierem `null`) o organizador preenche.
-
-#### Como `missingFields` é preenchido
-
-A API recalcula `missingFields` depois de validar a resposta da IA, então a lista é sempre coerente com o rascunho:
-
-- Entra todo campo de topo que ficou `null`: `name`, `description`, `category`, `ageRating`, `edition`, `startDate`, `endDate` e `venueSuggestion`.
-- Entra `suggestedTicketTypes` quando a lista de lotes está vazia.
-- A ordem é sempre a da tabela acima.
-- Campos dentro de `venueSuggestion` e dos lotes que vierem `null` (por exemplo, `quantity`) não entram na lista: o próprio `null` indica o que revisar.
-
-Antes de devolver o rascunho, a API também corrige pequenos desvios da IA em vez de recusar tudo:
-
-- Texto em branco vira `null`, e textos acima do limite são cortados.
-- `state` que não seja uma sigla de 2 letras vira `null`.
-- Preço é arredondado para 2 casas; preço ou quantidade negativos viram `null`.
-- `endDate` anterior a `startDate` anula as duas datas, que entram em `missingFields`.
-
-Desvios de estrutura (tipo errado, valor fora dos enums, campo extra) não são corrigidos e respondem `503`.
-
-#### Respostas de Erro (`POST /events/ai-draft`)
-
-- **`400 Bad Request`:**
-  - `Descreva o evento para gerar o rascunho.` (`prompt` ausente, vazio ou só com espaços).
-  - `A descrição do evento deve ser um texto.` (`prompt` que não é string).
-  - `A descrição do evento deve ter no máximo 2000 caracteres.`
-  - `property <campo> should not exist` (campo extra no corpo).
-- **`401 Unauthorized`:** Token JWT ausente ou inválido.
-- **`403 Forbidden`:** `Acesso restrito a organizadores de eventos` (usuário sem organização aceita).
-- **`422 Unprocessable Entity`:** `Não foi possível gerar uma resposta com IA para esse texto. Reformule e tente novamente.` (a IA recusou a descrição).
-- **`429 Too Many Requests`:** `Você atingiu o limite de gerações com IA. Tente novamente em N segundos.`, com o cabeçalho `Retry-After` em segundos. O limite é por usuário (padrão: 5 gerações por minuto) e uma chamada com corpo inválido também conta.
-- **`503 Service Unavailable`:**
-  - `A geração com IA não está disponível no momento. Tente novamente em instantes.` (API sem `ANTHROPIC_API_KEY`, timeout, falha ou limite do provedor).
-  - `Não foi possível gerar o rascunho do evento com IA. Tente novamente em instantes.` (resposta da IA fora do formato esperado).
+O contrato, a ordem das perguntas, a regra de conclusão e o fluxo no front estão em [Assistente de Criação de Evento com IA](./assistente-criacao-evento.md). Essa rota substitui o antigo `POST /events/ai-draft`, removido na **GOL-295**.
 
 ---
 
@@ -439,16 +349,14 @@ As pastas `EVENTOS/` e `LOTES DE INGRESSO/` no repositório [`hubee-collections`
 | :---: | :--- | :--- | :--- |
 | `1` | `EVENTOS/POST CRIAR EVENTO.yml` | `POST {{baseUrl}}/events` | Cria o evento em `draft` com `{{tokenOrganizador}}` e grava o `id` em `{{eventId}}`. |
 | `2` | `EVENTOS/POST CRIAR EVENTO SEM PERMISSAO.yml` | `POST {{baseUrl}}/events` | Valida o bloqueio `403 Forbidden` quando chamado com `{{tokenComprador}}`. |
-| `3` | `EVENTOS/POST GERAR RASCUNHO COM IA.yml` | `POST {{baseUrl}}/events/ai-draft` | Gera um rascunho com `{{tokenOrganizador}}` e confere o payload: campos, enums, datas, lotes e `missingFields` coerente. Não salva nada. |
-| `4` | `EVENTOS/POST GERAR RASCUNHO COM IA SEM PERMISSAO.yml` | `POST {{baseUrl}}/events/ai-draft` | Valida o bloqueio `403 Forbidden` quando chamado com `{{tokenComprador}}`. |
-| `5` | `EVENTOS/PATCH ATUALIZAR EVENTO.yml` | `PATCH {{baseUrl}}/events/:id` | Atualiza dados do evento `{{eventId}}` e publica (`status: "published"`), validando `200 OK`. |
-| `6` | `LOTES DE INGRESSO/POST CRIAR LOTE.yml` | `POST {{baseUrl}}/events/:eventId/ticket-types` | Cria um lote no evento `{{eventId}}` e grava o `id` em `{{ticketTypeId}}`. |
-| `7` | `LOTES DE INGRESSO/GET LISTAR LOTES.yml` | `GET {{baseUrl}}/events/:eventId/ticket-types` | Lista os lotes de `{{eventId}}` conferindo o retorno em array e o campo `available`. |
-| `8` | `LOTES DE INGRESSO/PATCH ATUALIZAR LOTE.yml` | `PATCH {{baseUrl}}/events/:eventId/ticket-types/:id` | Atualiza `batch`, `price` e `quantity` do lote `{{ticketTypeId}}` (`200 OK`). |
-| `9` | `LOTES DE INGRESSO/DELETE REMOVER LOTE.yml` | `DELETE {{baseUrl}}/events/:eventId/ticket-types/:id` | Remove o lote `{{ticketTypeId}}` quando não há pedidos/ingressos vinculados (`204 No Content`). |
-| `10` | `EVENTOS/DELETE CANCELAR EVENTO.yml` | `DELETE {{baseUrl}}/events/:id` | Cancela o evento `{{eventId}}` exigindo nível `manage` (`204 No Content`). |
+| `3` | `EVENTOS/PATCH ATUALIZAR EVENTO.yml` | `PATCH {{baseUrl}}/events/:id` | Atualiza dados do evento `{{eventId}}` e publica (`status: "published"`), validando `200 OK`. |
+| `4` | `LOTES DE INGRESSO/POST CRIAR LOTE.yml` | `POST {{baseUrl}}/events/:eventId/ticket-types` | Cria um lote no evento `{{eventId}}` e grava o `id` em `{{ticketTypeId}}`. |
+| `5` | `LOTES DE INGRESSO/GET LISTAR LOTES.yml` | `GET {{baseUrl}}/events/:eventId/ticket-types` | Lista os lotes de `{{eventId}}` conferindo o retorno em array e o campo `available`. |
+| `6` | `LOTES DE INGRESSO/PATCH ATUALIZAR LOTE.yml` | `PATCH {{baseUrl}}/events/:eventId/ticket-types/:id` | Atualiza `batch`, `price` e `quantity` do lote `{{ticketTypeId}}` (`200 OK`). |
+| `7` | `LOTES DE INGRESSO/DELETE REMOVER LOTE.yml` | `DELETE {{baseUrl}}/events/:eventId/ticket-types/:id` | Remove o lote `{{ticketTypeId}}` quando não há pedidos/ingressos vinculados (`204 No Content`). |
+| `8` | `EVENTOS/DELETE CANCELAR EVENTO.yml` | `DELETE {{baseUrl}}/events/:id` | Cancela o evento `{{eventId}}` exigindo nível `manage` (`204 No Content`). |
 
-O rascunho com IA (`3`) só responde `200` se a API tiver `ANTHROPIC_API_KEY`. Sem ela, como no ambiente `local` sem chave, a requisição responde `503` e o teste de status mostra a mensagem da API. Em `production` ela não altera dados, mas consome tokens pagos e a cota do organizador.
+As requisições do assistente de criação com IA ficam na subpasta `EVENTOS/ASSISTENTE DE CRIACAO/` e estão descritas em [Assistente de Criação de Evento com IA](./assistente-criacao-evento.md#testando-no-bruno).
 
 ---
 
@@ -457,10 +365,7 @@ O rascunho com IA (`3`) só responde `200` se a API tiver `ANTHROPIC_API_KEY`. S
 | Arquivo | Responsabilidade |
 | :--- | :--- |
 | `src/event/event.controller.ts` | Rotas `POST /events`, `GET /events`, `GET /events/summary`, `GET /events/:id`, `PATCH /events/:id`, `PATCH /events/:id/photo` e `DELETE /events/:id`. |
-| `src/event/ai-draft/event-ai-draft.controller.ts` | Rota `POST /events/ai-draft` (`@AiRateLimited()` + `@OrganizerOnly()`). |
-| `src/event/ai-draft/event-ai-draft.service.ts` | Chama o `AiService`, valida a resposta com `class-validator`, corrige desvios de formato e recalcula `missingFields`. |
-| `src/event/ai-draft/event-ai-draft.prompt.ts` e `event-ai-draft.schema.ts` | Prompt de sistema em pt-BR e JSON schema da saída estruturada. |
-| `src/event/dto/generate-event-draft.dto.ts` e `event-ai-draft-response.dto.ts` | Corpo (`GenerateEventDraftDto`) e rascunho (`EventAiDraftResponseDto`). |
+| `src/event/ai-assistant/` | Assistente de criação com IA (`POST /events/ai-assistant/turn`); detalhes em [Assistente de Criação de Evento com IA](./assistente-criacao-evento.md#onde-está-no-código). |
 | `src/event/event.service.ts` | Regras de visibilidade (`findAll`, `findVisible`), criação, edição, upload de capa, destaque (`ensureCanFeature`) e cancelamento (`ensureCanCancel`). |
 | `src/ticket-type/ticket-type.controller.ts` | Rotas `POST`, `GET`, `PATCH` e `DELETE` em `/events/:eventId/ticket-types`. |
 | `src/ticket-type/ticket-type.service.ts` | Validação de vínculo lote-evento, trava transacional de estoque (`quantity >= committed`) e bloqueio `409` de exclusão com vínculos. |
