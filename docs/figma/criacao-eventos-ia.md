@@ -6,6 +6,10 @@ description: Especificação visual, estados de geração por linguagem natural 
 
 # Criação de Eventos com IA
 
+:::caution Substituído pelo assistente
+O bloco `GeradorIaEvento` descrito nesta página saiu do editor na **GOL-293**, e a rota `POST /events/ai-draft` foi removida na **GOL-295**. A criação de eventos com IA agora é uma conversa em `/meus-eventos/novo/assistente`, descrita em [Assistente de Criação de Evento com IA](../backend/assistente-criacao-evento.md). Esta página fica como registro do desenho da GOL-262.
+:::
+
 Esta página documenta o desenho de interface e as especificações de handoff para a **geração de rascunho de evento por linguagem natural com Inteligência Artificial** na tela **`/meus-eventos/novo`**, desenvolvidos no escopo da tarefa **GOL-262**.
 
 - **Rota:** `/meus-eventos/novo` (Etapa 1 — `1. Dados do evento` do `EventoEditor`, fora da árvore `/conta`)
